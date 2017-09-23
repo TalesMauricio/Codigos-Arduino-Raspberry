@@ -14,17 +14,26 @@
 #include <SPI.h>
 //Include eeprom.h for AVR (Uno, Nano) etc. except ATTiny
 #include <EEPROM.h>
+#include "Wire.h"
+#define DS1307_ADDRESS 0x68
 
 /***** Configure the chosen CE,CS pins *****/
 RF24 radio(9,53);  //arduino mega
 RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 
+
+
+
+
 uint32_t displayTimer = 0;
 
 struct payload_t {                  // Structure of our payload
   unsigned long ms;
-  unsigned long counter;
+  unsigned long counter;  
+  int minu;
+  int hora; 
+  
 };
 
 
@@ -45,13 +54,47 @@ void loop() {
  
   if(network.available()){
     RF24NetworkHeader header;
+
+/* //////////////////////  exemplo helloworld_rx
+
+    payload_t payload;
+    network.read(header,&payload,sizeof(payload));
+    Serial.print("Received packet #");
+    Serial.print(payload.counter);
+    Serial.print(" at ");
+    Serial.println(payload.ms);
+
+
+
+
+
+*/ ////////////////////// FIM exemplo helloworld_rx
+    
     network.peek(header);
     
     uint32_t dat=0;
     switch(header.type){
       // Display the incoming millis() values from the sensor nodes
-      case 'M': network.read(header,&dat,sizeof(dat)); Serial.println(dat); break;
-      default: network.read(header,0,0); Serial.println(header.type);break;
+//      case 'M': network.read(header,&dat,sizeof(dat)); 
+//      Serial.println(dat); 
+//      break;
+
+      case 'H':
+      payload_t payload;
+    network.read(header,&payload,sizeof(payload));
+    Serial.print("Received packet #");
+    Serial.print(payload.counter);
+    Serial.print(" at ");
+    Serial.print(payload.ms);
+
+
+  Serial.print("           Hora : ");
+  Serial.print(payload.hora);
+  Serial.print(":");
+  Serial.println(payload.minu);
+    
+      break;
+      default: network.read(header,0,0); //Serial.println(header.type);break;
     }
   }
   
