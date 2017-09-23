@@ -30,11 +30,8 @@ struct payload_t {
 
 void setup() {
 
-  Serial.begin(115200);
-  //printf_begin();
-  // Set the nodeID manually
-  mesh.setNodeID(nodeID);
-  // Connect to the mesh
+  Serial.begin(115200);  
+  mesh.setNodeID(nodeID);  
   Serial.println(F("Connecting to the mesh..."));
   mesh.begin();
 }

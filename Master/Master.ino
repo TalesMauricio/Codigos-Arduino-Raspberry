@@ -22,6 +22,12 @@ RF24Mesh mesh(radio,network);
 
 uint32_t displayTimer = 0;
 
+struct payload_t {                  // Structure of our payload
+  unsigned long ms;
+  unsigned long counter;
+};
+
+
 void setup() {
   Serial.begin(115200); 
   mesh.setNodeID(0);
@@ -31,8 +37,7 @@ void setup() {
 }
 
 
-void loop() {    
-
+void loop() {  
   
   mesh.update();  
   mesh.DHCP();  
