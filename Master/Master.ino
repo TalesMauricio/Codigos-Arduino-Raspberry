@@ -31,9 +31,12 @@ uint32_t displayTimer = 0;
 struct payload_t {                  // Structure of our payload
   unsigned long ms;
   unsigned long counter;  
-  int minu;
-  int hora; 
-  
+  int segundos_p;
+  int minutos_p;
+  int horas_p;
+  int diadomes_p;
+  int mes_p;
+  int ano_p;    
 };
 
 
@@ -82,16 +85,25 @@ void loop() {
       case 'H':
       payload_t payload;
     network.read(header,&payload,sizeof(payload));
-    Serial.print("Received packet #");
+    Serial.print("Pacote N:");
     Serial.print(payload.counter);
-    Serial.print(" at ");
+    Serial.print(" Teste conexao ok: ");
     Serial.print(payload.ms);
-
-
-  Serial.print("           Hora : ");
-  Serial.print(payload.hora);
-  Serial.print(":");
-  Serial.println(payload.minu);
+    
+    Serial.print("             Data: ");
+    Serial.print(payload.diadomes_p);
+    Serial.print("/");
+    Serial.print(payload.mes_p);
+    Serial.print("/");
+    Serial.print(payload.ano_p);
+    Serial.print(" ");
+    Serial.print("    Hora : ");
+    Serial.print(payload.horas_p);
+    Serial.print(":");
+    Serial.print(payload.minutos_p);
+    Serial.print(":");
+    Serial.println(payload.segundos_p);    
+   
     
       break;
       default: network.read(header,0,0); //Serial.println(header.type);break;

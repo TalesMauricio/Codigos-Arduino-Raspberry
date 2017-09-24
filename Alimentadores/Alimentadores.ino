@@ -25,13 +25,13 @@ RF24Mesh mesh(radio, network);
 int comut = 1;
 
 byte zero = 0x00; 
-//int segundos = 0;
-//int minutos = 0;
-//int horas = 0;
-//int diadasemana = 0;
-//int diadomes = 0;
-//int mes = 0;
-//int ano = 0;
+int segundos = 0;
+int minutos = 0;
+int horas = 0;
+int diadasemana = 0;
+int diadomes = 0;
+int mes = 0;
+int ano = 0;
 
 
 uint32_t displayTimer = 0;
@@ -44,19 +44,17 @@ unsigned long last_sent;             // When did we last send?
 unsigned long packets_sent;          // How many have we sent already
 
 ////////////////////////////// FIM helloworld_tx
-  int segundos = 0;
-  int minutos = 0;
-  int horas = 0;
-  int diadasemana = 0;
-  int diadomes = 0;
-  int mes = 0;
-  int ano = 0;
+
 
 struct payload_t {
   unsigned long ms;
   unsigned long counter;
-  int minu;
-  int hora;  
+  int segundos_p;
+  int minutos_p;
+  int horas_p;
+  int diadomes_p;
+  int mes_p;
+  int ano_p;   
 };
 
 void setup() {
@@ -77,8 +75,6 @@ void loop() {
 
   mesh.update();
 
-
-
 ///////////////////////////  helloworld_tx
 
  unsigned long now = millis();              // If it's time to send a message, send it!
@@ -87,7 +83,7 @@ void loop() {
 //    last_sent = now;
 
 //    Serial.print("Sending...");
-    payload_t payload = { millis(), packets_sent++, minutos, horas};
+    payload_t payload = { millis(), packets_sent++, segundos, minutos, horas, diadomes, mes, ano };
 //    RF24NetworkHeader header(/*to node*/ other_node);
 //    bool ok = network.write(header,&payload,sizeof(payload));
   if (!mesh.write(&payload, 'H', sizeof(payload))) {
@@ -99,7 +95,7 @@ void loop() {
         Serial.println("Send fail, Test OK");
       }
     } else {
-      Serial.print("Send OK teste tales: "); Serial.println(now);
+      Serial.print("            Pacote N:"); Serial.print(packets_sent);
       last_sent = now;
     }
     
@@ -111,8 +107,6 @@ void loop() {
 
 delay(1000);
 ////////////////////////////// FIM helloworld_tx
-
-
 
 
 
@@ -132,9 +126,11 @@ delay(1000);
         Serial.println("Send fail, Test OK");
       }
     } else {
-      Serial.print("Send OK: "); Serial.println(displayTimer);
+      Serial.print("       Teste de conexao OK: "); Serial.println(displayTimer);
     }
   }
+  
+///////////////// parte esquisita...
 
   while (network.available()) {
     RF24NetworkHeader header;
