@@ -46,15 +46,14 @@ unsigned long packets_sent;          // How many have we sent already
 ////////////////////////////// FIM helloworld_tx
 
 
-struct payload_t {
-  unsigned long ms;
-  unsigned long counter;
-  int segundos_p;
-  int minutos_p;
-  int horas_p;
-  int diadomes_p;
-  int mes_p;
-  int ano_p;   
+//Estrutura do pacote a ser enviado
+struct pacote_t
+{
+  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada
+  uint8_t tipoInfo;      //Tipo da informação
+  uint8_t Info;          //Informação
+  uint8_t hora;          //Hora que foi enviada
+  uint8_t minuto;        //Minuto que foi enviada
 };
 
 void setup() {
@@ -71,7 +70,7 @@ void setup() {
 
 
 void loop() {
-  Mostrarelogio();
+  Relogio();
 
   mesh.update();
 
@@ -83,7 +82,7 @@ void loop() {
 //    last_sent = now;
 
 //    Serial.print("Sending...");
-    payload_t payload = { millis(), packets_sent++, segundos, minutos, horas, diadomes, mes, ano };
+    pacote_t pacote = { nodeID, 1, 1024, horas, minutos};
 //    RF24NetworkHeader header(/*to node*/ other_node);
 //    bool ok = network.write(header,&payload,sizeof(payload));
   if (!mesh.write(&payload, 'H', sizeof(payload))) {
@@ -152,9 +151,7 @@ byte ConverteparaDecimal(byte val)  { //Converte de BCD para decimal
 }
 
 
-//####################################################  Relógio   ################################
-
-void Mostrarelogio()
+void Relogio()
 {
   Wire.beginTransmission(DS1307_ADDRESS);
   Wire.write(zero);
@@ -168,39 +165,7 @@ void Mostrarelogio()
   diadomes = ConverteparaDecimal(Wire.read());
   mes = ConverteparaDecimal(Wire.read());
   ano = ConverteparaDecimal(Wire.read());
-
-  //Mostra a data no Serial Monitor
-  Serial.print("Data: ");
-  Serial.print(diadomes);
-  Serial.print("/");
-  Serial.print(mes);
-  Serial.print("/");
-  Serial.print(ano);
-  Serial.print(" ");
-  Serial.print("Hora : ");
-  Serial.print(horas);
-  Serial.print(":");
-  Serial.print(minutos);
-  Serial.print(":");
-  Serial.print(segundos);
-  switch(diadasemana)
-    {
-      case 0:Serial.println(", Domingo");
-      break;
-      case 1:Serial.println(", Segunda");
-      break;
-      case 2:Serial.println(", Terca");
-      break;
-      case 3:Serial.println(", Quarta");
-      break;
-      case 4:Serial.println(", Quinta");
-      break;
-      case 5:Serial.println(", Sexta");
-      break;
-      case 6:Serial.println(", Sabado");
-    }
 }
-//#################################################### fim Relógio   ################################
 
 
 
