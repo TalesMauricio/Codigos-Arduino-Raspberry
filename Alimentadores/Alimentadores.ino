@@ -51,7 +51,7 @@ struct pacote_t
 {
   uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada
   uint8_t tipoInfo;      //Tipo da informação
-  uint8_t Info;          //Informação
+  uint8_t info;          //Informação
   uint8_t hora;          //Hora que foi enviada
   uint8_t minuto;        //Minuto que foi enviada
 };
@@ -70,54 +70,21 @@ void setup() {
 
 
 void loop() {
+ 
+  mesh.update();
   Relogio();
 
-  mesh.update();
-
-///////////////////////////  helloworld_tx
-
- unsigned long now = millis();              // If it's time to send a message, send it!
-//  if ( now - last_sent >= interval  )
-//  {
-//    last_sent = now;
-
-//    Serial.print("Sending...");
-    pacote_t pacote = { nodeID, 1, 1024, horas, minutos};
-//    RF24NetworkHeader header(/*to node*/ other_node);
-//    bool ok = network.write(header,&payload,sizeof(payload));
-  if (!mesh.write(&payload, 'H', sizeof(payload))) {
-    if ( ! mesh.checkConnection() ) {
-        //refresh the network address
-        Serial.println("ress");
-//        mesh.renewAddress();
-      } else {
-        Serial.println("Send fail, Test OK");
-      }
-    } else {
-      Serial.print("            Pacote N:"); Serial.print(packets_sent);
-      last_sent = now;
-    }
-    
-//    if (ok)
-//      Serial.println("ok.");
-//    else
-//      Serial.println("failed.");
-//  }
-
-delay(1000);
-////////////////////////////// FIM helloworld_tx
-
-
-
+  unsigned long now = millis();
+   pacote_t pacote = {nodeID, 1, 1024, horas, minutos};
   // Send to the master node every second
   if (millis() - displayTimer >= 1000) {
     displayTimer = millis();
 
     // Send an 'M' type message containing the current millis()
-    if (!mesh.write(&displayTimer, 'M', sizeof(displayTimer))) {
+    if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
 
       // If a write fails, check connectivity to the mesh network
-      if ( ! mesh.checkConnection() ) {
+      if (!mesh.checkConnection() ) {
         //refresh the network address
         Serial.println("Renewing Address");
         mesh.renewAddress();
@@ -128,9 +95,10 @@ delay(1000);
       Serial.print("       Teste de conexao OK: "); Serial.println(displayTimer);
     }
   }
-  
-///////////////// parte esquisita...
 
+  delay(1000);
+///////////////// parte esquisita...
+/*
   while (network.available()) {
     RF24NetworkHeader header;
     payload_t payload;
@@ -140,6 +108,7 @@ delay(1000);
     Serial.print(" at ");
     Serial.println(payload.ms);
   }
+  */
 }
 
 byte ConverteParaBCD(byte val){ //Converte o número de decimal para BCD
