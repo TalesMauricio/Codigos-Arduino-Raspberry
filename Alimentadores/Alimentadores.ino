@@ -46,15 +46,14 @@ unsigned long packets_sent;          // How many have we sent already
 ////////////////////////////// FIM helloworld_tx
 
 
-struct payload_t {
-  unsigned long ms;
-  unsigned long counter;
-  int segundos_p;
-  int minutos_p;
-  int horas_p;
-  int diadomes_p;
-  int mes_p;
-  int ano_p;   
+//Estrutura do pacote a ser enviado
+struct pacote_t
+{
+  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada
+  uint8_t tipoInfo;      //Tipo da informação
+  uint8_t info;          //Informação
+  uint8_t hora;          //Hora que foi enviada
+  uint8_t minuto;        //Minuto que foi enviada
 };
 
 void setup() {
@@ -71,54 +70,21 @@ void setup() {
 
 
 void loop() {
-  Mostrarelogio();
-
+ 
   mesh.update();
+  Relogio();
 
-///////////////////////////  helloworld_tx
-
- unsigned long now = millis();              // If it's time to send a message, send it!
-//  if ( now - last_sent >= interval  )
-//  {
-//    last_sent = now;
-
-//    Serial.print("Sending...");
-    payload_t payload = { millis(), packets_sent++, segundos, minutos, horas, diadomes, mes, ano };
-//    RF24NetworkHeader header(/*to node*/ other_node);
-//    bool ok = network.write(header,&payload,sizeof(payload));
-  if (!mesh.write(&payload, 'H', sizeof(payload))) {
-    if ( ! mesh.checkConnection() ) {
-        //refresh the network address
-        Serial.println("ress");
-//        mesh.renewAddress();
-      } else {
-        Serial.println("Send fail, Test OK");
-      }
-    } else {
-      Serial.print("            Pacote N:"); Serial.print(packets_sent);
-      last_sent = now;
-    }
-    
-//    if (ok)
-//      Serial.println("ok.");
-//    else
-//      Serial.println("failed.");
-//  }
-
-delay(1000);
-////////////////////////////// FIM helloworld_tx
-
-
-
+  unsigned long now = millis();
+   pacote_t pacote = {nodeID, 1, 1024, horas, minutos};
   // Send to the master node every second
   if (millis() - displayTimer >= 1000) {
     displayTimer = millis();
 
     // Send an 'M' type message containing the current millis()
-    if (!mesh.write(&displayTimer, 'M', sizeof(displayTimer))) {
+    if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
 
       // If a write fails, check connectivity to the mesh network
-      if ( ! mesh.checkConnection() ) {
+      if (!mesh.checkConnection() ) {
         //refresh the network address
         Serial.println("Renewing Address");
         mesh.renewAddress();
@@ -129,9 +95,10 @@ delay(1000);
       Serial.print("       Teste de conexao OK: "); Serial.println(displayTimer);
     }
   }
-  
-///////////////// parte esquisita...
 
+  delay(1000);
+///////////////// parte esquisita...
+/*
   while (network.available()) {
     RF24NetworkHeader header;
     payload_t payload;
@@ -141,6 +108,7 @@ delay(1000);
     Serial.print(" at ");
     Serial.println(payload.ms);
   }
+  */
 }
 
 byte ConverteParaBCD(byte val){ //Converte o número de decimal para BCD
@@ -152,9 +120,7 @@ byte ConverteparaDecimal(byte val)  { //Converte de BCD para decimal
 }
 
 
-//####################################################  Relógio   ################################
-
-void Mostrarelogio()
+void Relogio()
 {
   Wire.beginTransmission(DS1307_ADDRESS);
   Wire.write(zero);
@@ -168,39 +134,7 @@ void Mostrarelogio()
   diadomes = ConverteparaDecimal(Wire.read());
   mes = ConverteparaDecimal(Wire.read());
   ano = ConverteparaDecimal(Wire.read());
-
-  //Mostra a data no Serial Monitor
-  Serial.print("Data: ");
-  Serial.print(diadomes);
-  Serial.print("/");
-  Serial.print(mes);
-  Serial.print("/");
-  Serial.print(ano);
-  Serial.print(" ");
-  Serial.print("Hora : ");
-  Serial.print(horas);
-  Serial.print(":");
-  Serial.print(minutos);
-  Serial.print(":");
-  Serial.print(segundos);
-  switch(diadasemana)
-    {
-      case 0:Serial.println(", Domingo");
-      break;
-      case 1:Serial.println(", Segunda");
-      break;
-      case 2:Serial.println(", Terca");
-      break;
-      case 3:Serial.println(", Quarta");
-      break;
-      case 4:Serial.println(", Quinta");
-      break;
-      case 5:Serial.println(", Sexta");
-      break;
-      case 6:Serial.println(", Sabado");
-    }
 }
-//#################################################### fim Relógio   ################################
 
 
 
