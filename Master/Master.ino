@@ -41,6 +41,7 @@ struct pacote_t
 void setup() {
   Serial.begin(115200); 
   mesh.setNodeID(0);
+   Serial.print("Meu IP:");
   Serial.println(mesh.getNodeID());
   mesh.begin();
 
@@ -84,16 +85,16 @@ void loop() {
 //      break;
 
       case 'M':
-        Serial.print("Alimentador: ");
+        Serial.print("Alimentador:");
         Serial.print(pacote.alimentadorID);
-        Serial.print("Sensor: ");
+        Serial.print("    Sensor:");
         Serial.print(pacote.tipoInfo);
-        Serial.print("Valor medido: ");
+        Serial.print("    Valor medido:");
         Serial.print(pacote.info);  
-        Serial.print("Hora: ");
+        Serial.print("    Hora:");
         Serial.print(pacote.hora); 
-        Serial.print("Minuto: ");
-        Serial.print(pacote.minuto);   
+        Serial.print(":");
+        Serial.println(pacote.minuto);   
         break;
         
       default: network.read(header,0,0); //Serial.println(header.type);break;
