@@ -20,9 +20,7 @@
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
-#define nodeID 4  //1-255
-
-int comut = 1;
+#define nodeID 3  //1-255
 
 byte zero = 0x00; 
 int segundos = 0;
@@ -35,16 +33,6 @@ int ano = 0;
 
 
 uint32_t displayTimer = 0;
-////////////////////////////   helloworld_tx
-
-
-const unsigned long interval = 2000; //ms  // How often to send 'hello world to the other unit
-
-unsigned long last_sent;             // When did we last send?
-unsigned long packets_sent;          // How many have we sent already
-
-////////////////////////////// FIM helloworld_tx
-
 
 //Estrutura do pacote a ser enviado
 struct pacote_t
@@ -55,6 +43,17 @@ struct pacote_t
   uint8_t hora;          //Hora que foi enviada
   uint8_t minuto;        //Minuto que foi enviada
 };
+
+struct diretriz_t
+{
+  uint8_t alimentID;     //ID do alimentador                       informaçao nao será usada aqui
+  uint8_t inicio;            //hora de início
+  uint8_t frequencia;        //frequencia de alimentação
+  uint8_t qtd;               //quantidade de raçao despejada
+  uint8_t transf;          //tempo de atualização dos dados
+};
+
+
 
 void setup() {
   
@@ -75,7 +74,7 @@ void loop() {
   Relogio();
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, 1, 1024, horas, minutos};
+   pacote_t pacote = {nodeID, 1, 102, horas, minutos};
   // Send to the master node every second
   if (millis() - displayTimer >= 1000) {
     displayTimer = millis();
@@ -97,6 +96,41 @@ void loop() {
   }
 
   delay(1000);
+
+
+if(network.available()){
+    RF24NetworkHeader header;
+    network.peek(header);    
+    uint32_t dat=0;    
+    diretriz_t diretriz;
+    network.read(header,&diretriz,sizeof(diretriz));
+    switch(header.type){
+      case 'D':
+        Serial.print("Alimentador:");
+        Serial.print(diretriz.alimentID);
+        Serial.print("    inicio:");
+        Serial.print(diretriz.inicio);
+        Serial.print("    Frequencia:");
+        Serial.print(diretriz.frequencia);  
+        Serial.print("    qtd:");
+        Serial.print(diretriz.qtd); 
+        Serial.print("transf");
+        Serial.println(diretriz.transf);   
+        break;
+        
+      default: network.read(header,0,0); //Serial.println(header.type);break;
+    }
+  }
+
+
+
+
+
+
+
+
+
+  
 ///////////////// parte esquisita...
 /*
   while (network.available()) {
