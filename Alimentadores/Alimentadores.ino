@@ -20,7 +20,7 @@
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
-#define nodeID 3  //1-255
+#define nodeID 4  //1-255
 
 int comut = 1;
 
