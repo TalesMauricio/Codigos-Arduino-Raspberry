@@ -23,9 +23,6 @@ RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 
 
-
-
-
 uint32_t displayTimer = 0;
 
 struct pacote_t
@@ -36,6 +33,16 @@ struct pacote_t
   uint8_t hora;          //Hora que foi enviada
   uint8_t minuto;        //Minuto que foi enviada
 };
+
+struct diretriz_t
+{
+  uint8_t alimentID;         //ID do alimentador                       informaçao nao será usada aqui
+  uint8_t inicio;            //hora de início
+  uint8_t frequencia;        //frequencia de alimentação
+  uint8_t qtd;               //quantidade de raçao despejada
+  uint8_t transf;          //tempo de atualização dos dados
+};
+
 
 
 void setup() {
@@ -57,21 +64,6 @@ void loop() {
   if(network.available()){
     RF24NetworkHeader header;
 
-/* //////////////////////  exemplo helloworld_rx
-
-    payload_t payload;
-    network.read(header,&payload,sizeof(payload));
-    Serial.print("Received packet #");
-    Serial.print(payload.counter);
-    Serial.print(" at ");
-    Serial.println(payload.ms);
-
-
-
-
-
-*/ ////////////////////// FIM exemplo helloworld_rx
-    
     network.peek(header);
     
     uint32_t dat=0;
@@ -100,6 +92,26 @@ void loop() {
       default: network.read(header,0,0); //Serial.println(header.type);break;
     }
   }
+
+//////////////////////////  enviar
+
+  diretriz_t diretriz = {5, 10, 15, 20, 25};
+  
+if (!mesh.write(&diretriz, 'D', sizeof(diretriz),3)) {
+       
+      if (!mesh.checkConnection() ) {
+        //refresh the network address
+        Serial.println("sem conexão");
+//        mesh.renewAddress();
+      } else {
+        Serial.println("Send fail");
+      }
+    } else {
+      Serial.print("       Teste de conexao ok ");
+    }
+
+////////////////////// fim enviar
+  
   
   if(millis() - displayTimer > 5000){
     displayTimer = millis();
