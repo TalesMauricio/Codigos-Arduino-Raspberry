@@ -22,6 +22,9 @@ RF24 radio(9,53);  //arduino mega
 RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 
+int incomingByte; // uma variável para ler os dados em série recebidos na configuração @@@@@@@@@!!!!!!!! APAGAR NO PROJETO FINAL !!!!!!!!!!!!!@@@@@@@@@@@@@
+uint8_t temp = 7; // uma variável para ler os dados em série recebidos na configuração @@@@@@@@@!!!!!!!! APAGAR NO PROJETO FINAL !!!!!!!!!!!!!@@@@@@@@@@@@@
+
 
 uint32_t displayTimer = 0;
 
@@ -50,12 +53,35 @@ void setup() {
   mesh.setNodeID(0);
    Serial.print("Meu IP:");
   Serial.println(mesh.getNodeID());
+
+  Serial.println("Menu:");
+  Serial.println("Digite a para valores recebidos:");
+  Serial.println("Digite b para valores enviados:");
+  Serial.println("Digite c para controle de ID:");
+  
+  
   mesh.begin();
 
 }
 
 
-void loop() {  
+void loop() { 
+  
+////////////////// controle de dados
+   if (Serial.available() > 0) {
+    incomingByte = Serial.read();
+    if (incomingByte == 'a') {
+      temp = 1;
+    }
+    if (incomingByte == 'b') {
+      temp = 2;
+    }
+    if (incomingByte == 'c') {
+      temp = 3;
+    }
+   }
+
+//////////////////// controle de dados
   
   mesh.update();  
   mesh.DHCP();  
@@ -63,11 +89,8 @@ void loop() {
  
   if(network.available()){
     RF24NetworkHeader header;
-
-    network.peek(header);
-    
-    uint32_t dat=0;
-    
+    network.peek(header);    
+    uint32_t dat=0;    
     pacote_t pacote;
     network.read(header,&pacote,sizeof(pacote));
     switch(header.type){
@@ -75,9 +98,10 @@ void loop() {
 //      case 'M': network.read(header,&dat,sizeof(dat)); 
 //      Serial.println(dat); 
 //      break;
-
       case 'M':
-        Serial.print("Alimentador:");
+      if(temp == 1){
+        Serial.print("Recebeu:");
+        Serial.print("    Alimentador:");
         Serial.print(pacote.alimentadorID);
         Serial.print("    Sensor:");
         Serial.print(pacote.tipoInfo);
@@ -86,14 +110,33 @@ void loop() {
         Serial.print("    Hora:");
         Serial.print(pacote.hora); 
         Serial.print(":");
-        Serial.println(pacote.minuto);   
-        break;
-        
+        Serial.println(pacote.minuto);  
+        }//temp ==1  
+        break;        
       default: network.read(header,0,0); //Serial.println(header.type);break;
     }
-  }
 
-//////////////////////////  enviar
+diretriz_t diretriz = {3, 10, 15, 20, 4};  
+if (!mesh.write(&diretriz, 'D', sizeof(diretriz),3)) {
+ } else {
+  if(temp == 2){
+      Serial.print("Valores enviados para nodeID 3:  "); // somente para testes 
+      Serial.print("       alimentID: ");
+      Serial.print(diretriz.alimentID);
+      Serial.print("       inicio: ");
+      Serial.print("       frequencia: ");
+      Serial.print("       qtd: ");
+      Serial.print("       transf: ");
+            
+      Serial.println("       Teste de conexao ok ");
+
+  } // ////////////////   temp ==2 @@@@@@@@@@@@@@@ APAGAR DEPOIS @@@@@@@@@@@@@@ //////
+    }
+    
+  }
+ 
+
+/*/////////////////////////  enviar
 
   diretriz_t diretriz = {5, 10, 15, 20, 25};
   
@@ -101,19 +144,21 @@ if (!mesh.write(&diretriz, 'D', sizeof(diretriz),3)) {
        
       if (!mesh.checkConnection() ) {
         //refresh the network address
-        Serial.println("sem conexão");
+//        Serial.println("sem conexão");
 //        mesh.renewAddress();
       } else {
-        Serial.println("Send fail");
+//        Serial.println("Send fail");
       }
     } else {
       Serial.print("       Teste de conexao ok ");
     }
 
-////////////////////// fim enviar
+    
+///////////////////// fim enviar
+*/ 
   
-  
-  if(millis() - displayTimer > 5000){
+if(temp == 3) {     
+  if(millis() - displayTimer > 1000){
     displayTimer = millis();
     Serial.println(" ");
     Serial.println(F("********Assigned Addresses********"));
@@ -125,4 +170,11 @@ if (!mesh.write(&diretriz, 'D', sizeof(diretriz),3)) {
      }
     Serial.println(F("**********************************"));
   }
+} //temp == 3 ///////////   apagar depois
+  
 }
+
+
+
+
+
