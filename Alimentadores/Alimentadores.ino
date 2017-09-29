@@ -12,8 +12,15 @@
 #include "RF24Mesh.h"
 #include <SPI.h>
 //#include <printf.h>
+
+// RTC
 #include "Wire.h"
 #define DS1307_ADDRESS 0x68
+
+// nivel com HC-SR04
+#define echoPin 6 // Pino 7 recebe o pulso do echo do Sensor 1
+#define trigPin 5 // Pino 6 envia o pulso para gerar o echo do Sensor 1
+int prfdde = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 
 
 /**** Configure the nrf24l01 CE and CS pins ****/
@@ -53,30 +60,55 @@ struct diretriz_t
   uint8_t transf;          //tempo de atualização dos dados
 };
 
+int atualiza = 5000;
+
 
 
 void setup() {
+ 
+// nivel com HC-SR04
+  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
+  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
   
+// RTC
   Wire.begin();
-  Serial.begin(115200);
+   
+// comunicação
   SPI.begin();    
   mesh.setNodeID(nodeID);  
   Serial.println(F("Connecting to the mesh..."));
-//  radio.begin();
-  mesh.begin();   
+   //  radio.begin();
+  mesh.begin();
+
+// serial 
+  Serial.begin(115200);
+ 
 }
 
-
-
 void loop() {
+
+  //////////////////////////////////////////Nível
+  
+  /* Rotina de funionamento para o Sensor Ultrasson 1 */
+  digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
+  delayMicroseconds(2); // delay de 2 microssegundos
+  digitalWrite(trigPin, HIGH); // seta o pino 6 com pulso de "HIGH"
+  delayMicroseconds(10); // delay de 10 microssegundos
+  digitalWrite(trigPin, LOW); // seta o pino 12 com pulso baixo novamente
+  long duration = pulseIn(echoPin, HIGH); // pulseIn lê o tempo entre a chamada e o pino entrar em high
+  long distancia = duration / 29 / 2 ; // Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado// porque é o tempo de ida e volta do ultrassom
+  /* Calculo do percentual do nivel da caixa */
+  long nivel = distancia * 100 / prfdde; // variave nivel atribui o a valor da distancia e calcula
+  
+  //////////////////////////////////////////fim Nível
  
   mesh.update();
   Relogio();
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, 1, 102, horas, minutos};
+   pacote_t pacote = {nodeID, 1, nivel, horas, minutos};
   // Send to the master node every second
-  if (millis() - displayTimer >= 1000) {
+  if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
 
     // Send an 'M' type message containing the current millis()
@@ -91,7 +123,20 @@ void loop() {
         Serial.println("Send fail, Test OK");
       }
     } else {
-      Serial.print("       Teste de conexao OK: "); Serial.println(displayTimer);
+      Serial.print("Conexao OK:  //// ");
+      // Serial.println(displayTimer);
+      Serial.print("   val.env ");
+      Serial.print("  1-nodeID: ");
+      Serial.print(nodeID);
+      Serial.print("  2-t-inf: ");
+      Serial.print("1");
+      Serial.print("  3-inf: ");
+      Serial.print("102");  
+      Serial.print("  4-Hora : ");
+      Serial.print(horas);
+      Serial.print(":");
+      Serial.print(minutos); 
+      Serial.print("   ////  ");
     }
   }
 
@@ -106,26 +151,27 @@ if(network.available()){
     network.read(header,&diretriz,sizeof(diretriz));
     switch(header.type){
       case 'D':
-        Serial.print("Alimentador:");
+        Serial.print("  recebe   A-ID:");
         Serial.print(diretriz.alimentID);
-        Serial.print("    inicio:");
+        Serial.print("  ini:");
         Serial.print(diretriz.inicio);
-        Serial.print("    Frequencia:");
+        Serial.print("  Freq:");
         Serial.print(diretriz.frequencia);  
-        Serial.print("    qtd:");
+        Serial.print("  qtd:");
         Serial.print(diretriz.qtd); 
-        Serial.print("transf");
-        Serial.println(diretriz.transf);   
+        Serial.print("  T-Tran:");
+        Serial.print(diretriz.transf);
+        atualiza = ((diretriz.transf)*1000); 
+        Serial.print("  atl:");
+        Serial.println(atualiza);
+           
         break;
         
       default: network.read(header,0,0); //Serial.println(header.type);break;
     }
   }
-
-
-
-
-
+  
+ 
 
 
 
