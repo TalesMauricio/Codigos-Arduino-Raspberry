@@ -24,6 +24,11 @@ int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da ca
 long medianivel = 0;
 uint8_t nivel;
 
+// temperatura
+//#include <OneWire.h>
+//OneWire  ds(10);  // on pin 10 (a 4.7K resistor is necessary)
+//float celsius = 0;
+
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(7, 8);
 RF24Network network(radio);
@@ -64,8 +69,6 @@ struct diretriz_t
 
 int atualiza = 5000;
 
-
-
 void setup() {
  
 // nivel com HC-SR04
@@ -93,6 +96,7 @@ void loop() {
   mesh.update();
   Relogio();
   Nivel();
+//  Temperatura();
   
 
   unsigned long now = millis();
@@ -125,7 +129,7 @@ void loop() {
       Serial.print("  4-nivel: ");
       Serial.print(nivel);
       Serial.print("  5-temp: ");
-      Serial.print(nivel); 
+      Serial.print("1"); 
       Serial.print("   ////  ");
     }
   }
@@ -236,9 +240,63 @@ void Nivel()
   nivel = medianivel;
   medianivel = 0;
 }
-   
- 
 
+
+/////////////////////////////////////////////////////////// Temperatura    
+/*
+void Temperatura()
+{
+byte type_s;
+  byte data[12];
+  byte addr[8];
+  
+  if ( !ds.search(addr)) {
+    ds.reset_search();
+    delay(250);
+    return;
+  }
+
+  if (OneWire::crc8(addr, 7) != addr[7]) {
+      Serial.println("CRC is not valid!");
+      return;
+  }
+
+  ds.reset();
+  ds.select(addr);
+  ds.write(0x44, 1);        // start conversion, with parasite power on at the end
+  
+  delay(1000);     // maybe 750ms is enough, maybe not
+  // we might do a ds.depower() here, but the reset will take care of it.
+  
+  byte present = ds.reset();
+  ds.select(addr);    
+  ds.write(0xBE);         // Read Scratchpad
+
+  for ( byte i = 0; i < 9; i++) {           // we need 9 bytes
+    data[i] = ds.read();
+  }
+  int16_t raw = (data[1] << 8) | data[0];
+  if (type_s) {
+    raw = raw << 3; // 9 bit resolution default
+    if (data[7] == 0x10) {
+      // "count remain" gives full 12 bit resolution
+      raw = (raw & 0xFFF0) + 12 - data[6];
+    }
+  } else {
+    byte cfg = (data[4] & 0x60);   
+    if (cfg == 0x00) raw = raw & ~7;  // 9 bit resolution, 93.75 ms
+    else if (cfg == 0x20) raw = raw & ~3; // 10 bit res, 187.5 ms
+    else if (cfg == 0x40) raw = raw & ~1; // 11 bit res, 375 ms
+    //// default is 12 bit resolution, 750 ms conversion time
+  }
+  celsius = (float)raw / 16.0; 
+//  Serial.print("  Temperature = ");
+//  Serial.print(celsius);
+//  Serial.println(" Celsius, ");
+  
+}
+ 
+*/
 
 
 

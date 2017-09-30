@@ -1,52 +1,60 @@
 #include <OneWire.h>
-int SensorPin = 10; 
+OneWire  ds(10);  // on pin 10 (a 4.7K resistor is necessary)
 
-OneWire ds(SensorPin); 
 void setup(void) {
-Serial.begin(9600);
+  Serial.begin(115200);
 }
+
 void loop(void) {
-float temp = getTemp();
-Serial.println(temp);
 
-delay(100); 
 
-}
+  
+  byte type_s;
+  byte data[12];
+  byte addr[8];
+  float celsius;
+  
+  if ( !ds.search(addr)) {
+    ds.reset_search();
+    delay(250);
+    return;
+  }
 
-float getTemp(){
-byte data[12];
-byte addr[8];
-if ( !ds.search(addr)) {
-//no more sensors on chain, reset search
-ds.reset_search();
-return -1000;
-}
-if ( OneWire::crc8( addr, 7) != addr[7]) {
-Serial.println("CRC is not valid!");
-return -1000;
-}
-if ( addr[0] != 0x10 && addr[0] != 0x28) {
-Serial.print("Device is not recognized");
-return -1000;
-}
-ds.reset();
-ds.select(addr);
-ds.write(0x44,1); 
-byte present = ds.reset();
-ds.select(addr); 
-ds.write(0xBE); 
+  if (OneWire::crc8(addr, 7) != addr[7]) {
+      Serial.println("CRC is not valid!");
+      return;
+  }
 
-for (int i = 0; i < 9; i++) { 
-data[i] = ds.read();
-}
+  ds.reset();
+  ds.select(addr);
+  ds.write(0x44, 1);        // start conversion, with parasite power on at the end
+  
+  delay(1000);     // maybe 750ms is enough, maybe not
+  // we might do a ds.depower() here, but the reset will take care of it.
+  
+  byte present = ds.reset();
+  ds.select(addr);    
+  ds.write(0xBE);         // Read Scratchpad
 
-ds.reset_search();
-
-byte MSB = data[1];
-byte LSB = data[0];
-float TRead = ((MSB 8) | LSB); 
-float Temperature = TRead / 16;
-
-return Temperature;
-
+  for ( byte i = 0; i < 9; i++) {           // we need 9 bytes
+    data[i] = ds.read();
+  }
+  int16_t raw = (data[1] << 8) | data[0];
+  if (type_s) {
+    raw = raw << 3; // 9 bit resolution default
+    if (data[7] == 0x10) {
+      // "count remain" gives full 12 bit resolution
+      raw = (raw & 0xFFF0) + 12 - data[6];
+    }
+  } else {
+    byte cfg = (data[4] & 0x60);   
+    if (cfg == 0x00) raw = raw & ~7;  // 9 bit resolution, 93.75 ms
+    else if (cfg == 0x20) raw = raw & ~3; // 10 bit res, 187.5 ms
+    else if (cfg == 0x40) raw = raw & ~1; // 11 bit res, 375 ms
+    //// default is 12 bit resolution, 750 ms conversion time
+  }
+  celsius = (float)raw / 16.0; 
+  Serial.print("  Temperature = ");
+  Serial.print(celsius);
+  Serial.println(" Celsius, ");  
 }
