@@ -20,8 +20,9 @@
 // nivel com HC-SR04
 #define echoPin 6 // Pino 7 recebe o pulso do echo do Sensor 1
 #define trigPin 5 // Pino 6 envia o pulso para gerar o echo do Sensor 1
-int prfdde = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
-
+int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
+long medianivel = 0;
+uint8_t nivel;
 
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(7, 8);
@@ -31,24 +32,25 @@ RF24Mesh mesh(radio, network);
 
 byte zero = 0x00; 
 int segundos = 0;
-int minutos = 0;
-int horas = 0;
+
+uint8_t minutos = 0;
+uint8_t horas = 0;
+
 int diadasemana = 0;
 int diadomes = 0;
 int mes = 0;
 int ano = 0;
-
 
 uint32_t displayTimer = 0;
 
 //Estrutura do pacote a ser enviado
 struct pacote_t
 {
-  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada
-  uint8_t tipoInfo;      //Tipo da informação
-  uint8_t info;          //Informação
+  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada  
   uint8_t hora;          //Hora que foi enviada
   uint8_t minuto;        //Minuto que foi enviada
+  uint8_t nivel;         //Nível de ração no reservatório 1
+  uint8_t temperatura;          //Informação
 };
 
 struct diretriz_t
@@ -86,28 +88,16 @@ void setup() {
 }
 
 void loop() {
-
-  //////////////////////////////////////////Nível
   
-  /* Rotina de funionamento para o Sensor Ultrasson 1 */
-  digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
-  delayMicroseconds(2); // delay de 2 microssegundos
-  digitalWrite(trigPin, HIGH); // seta o pino 6 com pulso de "HIGH"
-  delayMicroseconds(10); // delay de 10 microssegundos
-  digitalWrite(trigPin, LOW); // seta o pino 12 com pulso baixo novamente
-  long duration = pulseIn(echoPin, HIGH); // pulseIn lê o tempo entre a chamada e o pino entrar em high
-  long distancia = duration / 29 / 2 ; // Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado// porque é o tempo de ida e volta do ultrassom
-  /* Calculo do percentual do nivel da caixa */
-  long nivel = distancia * 100 / prfdde; // variave nivel atribui o a valor da distancia e calcula
-  
-  //////////////////////////////////////////fim Nível
  
   mesh.update();
   Relogio();
+  Nivel();
+  
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, 1, nivel, horas, minutos};
-  // Send to the master node every second
+   pacote_t pacote = {nodeID, horas, minutos, nivel, 1};
+  
   if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
 
@@ -128,14 +118,14 @@ void loop() {
       Serial.print("   val.env ");
       Serial.print("  1-nodeID: ");
       Serial.print(nodeID);
-      Serial.print("  2-t-inf: ");
-      Serial.print("1");
-      Serial.print("  3-inf: ");
-      Serial.print("102");  
-      Serial.print("  4-Hora : ");
+      Serial.print("  2-hora: ");
       Serial.print(horas);
-      Serial.print(":");
-      Serial.print(minutos); 
+      Serial.print("  3-minuto: ");
+      Serial.print(minutos);  
+      Serial.print("  4-nivel: ");
+      Serial.print(nivel);
+      Serial.print("  5-temp: ");
+      Serial.print(nivel); 
       Serial.print("   ////  ");
     }
   }
@@ -199,7 +189,7 @@ byte ConverteparaDecimal(byte val)  { //Converte de BCD para decimal
   return ( (val/16*10) + (val%16) );
 }
 
-
+/////////////////////////////////////////////////////////// Relogio
 void Relogio()
 {
   Wire.beginTransmission(DS1307_ADDRESS);
@@ -215,6 +205,40 @@ void Relogio()
   mes = ConverteparaDecimal(Wire.read());
   ano = ConverteparaDecimal(Wire.read());
 }
+
+
+void Nivel()
+{
+
+/////////////////////////////////////////////////////////// Nível  
+  /* Rotina de funionamento para o Sensor Ultrasson 1 */  
+  for (int i=1; i <= 25; i++){
+    digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
+    delayMicroseconds(2); // delay de 2 microssegundos
+    digitalWrite(trigPin, HIGH); // seta o pino 6 com pulso de "HIGH"
+    delayMicroseconds(10); // delay de 10 microssegundos
+    digitalWrite(trigPin, LOW); // seta o pino 12 com pulso baixo novamente
+    long tempo = pulseIn(echoPin, HIGH); // pulseIn lê o tempo entre a chamada e o pino entrar em high
+    
+    //////////@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    melhorar o filtro @@@@@@@@@@@@@@@@@@@@@@@@@@@@//////////
+    
+    long nivel_atual = tempo / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........................
+      if(nivel_atual <= 100){
+        medianivel = (medianivel + nivel_atual);
+      }
+      else{
+        i--;
+        delay(300);
+      }
+    delay(200);
+  }
+  medianivel = 100-(medianivel/25);
+  nivel = medianivel;
+  medianivel = 0;
+}
+   
+ 
+
 
 
 

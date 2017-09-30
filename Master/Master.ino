@@ -30,11 +30,11 @@ uint32_t displayTimer = 0;
 
 struct pacote_t
 {
-  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada
-  uint8_t tipoInfo;      //Tipo da informação
-  uint8_t info;          //Informação
+  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada  
   uint8_t hora;          //Hora que foi enviada
   uint8_t minuto;        //Minuto que foi enviada
+  uint8_t nivel;         //Nível de ração no reservatório 1
+  uint8_t temperatura;          //Informação
 };
 
 struct diretriz_t
@@ -101,16 +101,16 @@ void loop() {
       case 'M':
       if(temp == 1){
         Serial.print("Recebeu:");
-        Serial.print("    Alimentador:");
+        Serial.print("  1-nodeID: ");
         Serial.print(pacote.alimentadorID);
-        Serial.print("    Sensor:");
-        Serial.print(pacote.tipoInfo);
-        Serial.print("    Valor medido:");
-        Serial.print(pacote.info);  
-        Serial.print("    Hora:");
-        Serial.print(pacote.hora); 
-        Serial.print(":");
-        Serial.println(pacote.minuto);  
+        Serial.print("  2-hora: ");
+        Serial.print(pacote.hora);
+        Serial.print("  3-minuto: ");
+        Serial.print(pacote.minuto);  
+        Serial.print("  4-nivel: ");
+        Serial.print(pacote.nivel); 
+        Serial.print("  5-temp: ");
+        Serial.println(pacote.temperatura);  
         }//temp ==1  
         break;        
       default: network.read(header,0,0); //Serial.println(header.type);break;
