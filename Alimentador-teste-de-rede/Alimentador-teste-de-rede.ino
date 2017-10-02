@@ -14,7 +14,9 @@
 #include "Wire.h"
 #define DS1307_ADDRESS 0x68
 
+/*
 // nivel com HC-SR04
+
 #define echoPin 6 // Pino 7 recebe o pulso do echo do Sensor 1
 #define trigPin 5 // Pino 6 envia o pulso para gerar o echo do Sensor 1
 int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
@@ -22,7 +24,7 @@ long medianivel = 0;
 uint8_t nivel;
 
 // temperatura
-/*
+
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 #define ONE_WIRE_BUS 10 
@@ -36,7 +38,7 @@ uint8_t temperatura;
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
-#define nodeID 2  //1-255
+#define nodeID 4  //1-255
 
 byte zero = 0x00; 
 int segundos = 0;
@@ -77,8 +79,8 @@ void setup() {
   Serial.begin(115200);
   
 // nivel com HC-SR04
-  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
-  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
+//  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
+//  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
   
 // RTC
 // temperatura
@@ -101,12 +103,12 @@ void loop() {
  
   mesh.update();
   Relogio();
-  Nivel();  
+//  Nivel();  
   
   
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, horas, minutos, nivel, 1};
+   pacote_t pacote = {nodeID, horas, minutos, 50, 1};
   
   if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
@@ -133,8 +135,9 @@ void loop() {
       Serial.print("  3-minuto: ");
       Serial.print(minutos);  
       Serial.print("  4-nivel: ");
-      Serial.print(nivel);
+      Serial.print("50");
       Serial.print("  5-temp: ");
+      Serial.print("1");
  //     Serial.print(celsius); 
       Serial.print("   ////  ");
     }
@@ -217,12 +220,12 @@ void Relogio()
   ano = ConverteparaDecimal(Wire.read());
 }
 
-
+/*
 void Nivel()
 {
 
 /////////////////////////////////////////////////////////// Nível  
-  /* Rotina de funionamento para o Sensor Ultrasson 1 */  
+  // Rotina de funionamento para o Sensor Ultrasson 1 //  
   for (int i=1; i <= 25; i++){
     digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
     delayMicroseconds(2); // delay de 2 microssegundos
@@ -248,8 +251,10 @@ void Nivel()
   medianivel = 0; 
 }
 
+*/
 
-///////////////////////////////////////////////////////////  Temperatura 
+///////////////////////////////////////////////////////////  Temperatura
+
 /*
 void Temperatura()
 { 
