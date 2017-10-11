@@ -38,7 +38,7 @@ uint8_t temperatura;
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
-#define nodeID 4  //1-255
+#define nodeID 3  //1-255
 
 byte zero = 0x00; 
 int segundos = 0;
@@ -72,7 +72,7 @@ struct diretriz_t
   int qtd;               //quantidade de raçao despejada
 };
 
-int atualiza = 5000;
+int atualiza = 1000;
 
 void setup() {
  // serial 
@@ -102,13 +102,13 @@ void loop() {
   
  
   mesh.update();
-  Relogio();
+//  Relogio();
 //  Nivel();  
   
   
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, horas, minutos, 50, 1};
+   pacote_t pacote = {nodeID, horas, minutos, 0, 5};
   
   if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
@@ -137,13 +137,13 @@ void loop() {
       Serial.print("  4-nivel: ");
       Serial.print("50");
       Serial.print("  5-temp: ");
-      Serial.print("1");
+      Serial.println("1");
  //     Serial.print(celsius); 
-      Serial.print("   ////  ");
+//      Serial.print("   ////  ");
     }
   }
 
-  delay(1000);
+  delay(500);
 
 
 if(network.available()){

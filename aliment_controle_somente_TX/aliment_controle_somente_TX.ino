@@ -37,7 +37,7 @@ uint8_t temperatura;
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
-#define nodeID 4  //1-255
+#define nodeID 3  //1-255
 
 byte zero = 0x00; 
 int segundos = 0;
