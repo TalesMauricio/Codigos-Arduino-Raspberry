@@ -72,7 +72,7 @@ struct diretriz_t
   int qtd;               //quantidade de raçao despejada
 };
 
-int atualiza = 1000;
+int atualiza = 5000;
 
 void setup() {
  // serial 

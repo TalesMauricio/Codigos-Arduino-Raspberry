@@ -63,11 +63,11 @@ struct pacote_t
 
 struct diretriz_t
 {
-  uint8_t alimentID;     //ID do alimentador                       informaçao nao será usada aqui
-  uint8_t inicio;            //hora de início
-  uint8_t frequencia;        //frequencia de alimentação
-  uint8_t qtd;               //quantidade de raçao despejada
-  uint8_t transf;          //tempo de atualização dos dados
+  int alimentID;     //ID do alimentador                       informaçao nao será usada aqui
+  int inicio_hora;            //hora de início
+  int inicio_minuto;
+  int frequencia;        //frequencia de alimentação
+  int qtd;    
 };
 
 int atualiza = 5000;
@@ -89,7 +89,6 @@ void setup() {
 // comunicação
   SPI.begin();    
   mesh.setNodeID(nodeID);  
-  Serial.println(F("Connecting to the mesh..."));
   Serial.println(F("Connecting to the mesh..."));
    //  radio.begin();
   mesh.begin();
@@ -134,9 +133,8 @@ void loop() {
       Serial.print(minutos);  
       Serial.print("  4-nivel: ");
       Serial.print(nivel);
-      Serial.print("  5-temp: ");
- //     Serial.print(celsius); 
-      Serial.print("   ////  ");
+      Serial.println("  5-temp: ");
+//      Serial.print("   ////  ");
     }
   }
 
@@ -153,43 +151,20 @@ if(network.available()){
       case 'D':
         Serial.print("  recebe   A-ID:");
         Serial.print(diretriz.alimentID);
-        Serial.print("  ini:");
-        Serial.print(diretriz.inicio);
+        Serial.print("  iniH:");
+        Serial.print(diretriz.inicio_hora);
+        Serial.print("  iniM:");
+        Serial.print(diretriz.inicio_minuto);
         Serial.print("  Freq:");
         Serial.print(diretriz.frequencia);  
         Serial.print("  qtd:");
-        Serial.print(diretriz.qtd); 
-        Serial.print("  T-Tran:");
-        Serial.print(diretriz.transf);
-        atualiza = ((diretriz.transf)*1000); 
-        Serial.print("  atl:");
-        Serial.println(atualiza);
-           
+        Serial.println(diretriz.qtd);                    
         break;
         
       default: network.read(header,0,0); //Serial.println(header.type);break;
     }
-  }
-  
- 
+  } 
 
-
-
-//Temperatura();
-
-  
-///////////////// parte esquisita...
-/*
-  while (network.available()) {
-    RF24NetworkHeader header;
-    payload_t payload;
-    network.read(header, &payload, sizeof(payload));
-    Serial.print("Received packet #");
-    Serial.print(payload.counter);
-    Serial.print(" at ");
-    Serial.println(payload.ms);
-  }
-  */
 }
 
 byte ConverteParaBCD(byte val){ //Converte o número de decimal para BCD
@@ -223,7 +198,7 @@ void Nivel()
 
 /////////////////////////////////////////////////////////// Nível  
   /* Rotina de funionamento para o Sensor Ultrasson 1 */  
-  for (int i=1; i <= 25; i++){
+  for (int i=1; i <= 10; i++){
     digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
     delayMicroseconds(2); // delay de 2 microssegundos
     digitalWrite(trigPin, HIGH); // seta o pino 6 com pulso de "HIGH"
@@ -239,27 +214,14 @@ void Nivel()
       }
       else{
         i--;
-        delay(300);
+        delay(100);
       }
     delay(200);
   }
-  medianivel = 100-(medianivel/25);
+  medianivel = 100-(medianivel/10);
   nivel = medianivel;
   medianivel = 0; 
 }
 
-
-///////////////////////////////////////////////////////////  Temperatura 
-/*
-void Temperatura()
-{ 
-  
- sensors.requestTemperatures(); // Send the command to get temperature readings  
-// Serial.print(sensors.getTempCByIndex(0)); 
- temperatura = sensors.getTempCByIndex(0);
- Serial.println(temperatura);
-}
-
-*/
 
 
