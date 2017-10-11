@@ -1,4 +1,3 @@
-
 /* 
  *  RF24Mesh_Example.ino by TMRh20
  *  simpless  
@@ -92,7 +91,7 @@ void setup() {
   SPI.begin();    
   mesh.setNodeID(nodeID);  
   Serial.println(F("Connecting to the mesh..."));
-  Serial.println(F("Connecting to the mesh..."));
+//  Serial.println(F("Connecting to the mesh..."));
    //  radio.begin();
   mesh.begin();
  
@@ -139,7 +138,7 @@ void loop() {
       Serial.print("  5-temp: ");
       Serial.print("1");
  //     Serial.print(celsius); 
-      Serial.print("   ////  ");
+      Serial.println("   ////  ");
     }
   }
 
@@ -154,6 +153,7 @@ if(network.available()){
     network.read(header,&diretriz,sizeof(diretriz));
     switch(header.type){
       case 'D':
+        displayTimer = millis() - 4000;        
         Serial.print("  recebe   A-ID:");
         Serial.print(diretriz.alimentID);
         Serial.print("  iniH:");
