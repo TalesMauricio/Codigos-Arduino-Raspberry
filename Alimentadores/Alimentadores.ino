@@ -1,7 +1,9 @@
 
-/* 
- *  RF24Mesh_Example.ino by TMRh20
- *  simpless  
+/*  Projeto Crema
+ *  Alimentador de peixes;
+ *  
+ *    
+ *    
 */
 
 #include "RF24.h"
@@ -21,29 +23,17 @@ int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da ca
 long medianivel = 0;
 uint8_t nivel;
 
-// temperatura
-/*
-#include <OneWire.h> 
-#include <DallasTemperature.h>
-#define ONE_WIRE_BUS 10 
-OneWire oneWire(ONE_WIRE_BUS); 
-DallasTemperature sensors(&oneWire);
-uint8_t temperatura;
-
-*/
-
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
+
 #define nodeID 2  //1-255
 
 byte zero = 0x00; 
 int segundos = 0;
-
 uint8_t minutos = 0;
 uint8_t horas = 0;
-
 int diadasemana = 0;
 int diadomes = 0;
 int mes = 0;
@@ -51,26 +41,36 @@ int ano = 0;
 
 uint32_t displayTimer = 0;
 
-//Estrutura do pacote a ser enviado
+/*Estrutura do pacote a ser enviado
+erro:
+   Dec ||    Bin   ||  Código
+    1: ||      1   ||  Dados recebidos inconpativeis
+    2: ||     10   ||  Tempo de alimentação muito grande
+    4: ||    100   ||  Porta do alimntador com defeito
+    8: ||   1000   ||  Tampa do reservatório aberta
+   16: ||  10000   ||  
+
+*/
 struct pacote_t
 {
-  uint8_t alimentadorID; //ID de qual alimentador a informação está sendo enviada  
-  uint8_t hora;          //Hora que foi enviada
-  uint8_t minuto;        //Minuto que foi enviada
-  uint8_t nivel;         //Nível de ração no reservatório 1
-  uint8_t temperatura;          //Informação
+  uint8_t alimentadorID; // ID de qual alimentador a informação está sendo enviada  
+  uint8_t hora;          // Hora que foi enviada
+  uint8_t minuto;        // Minuto que foi enviada
+  uint8_t nivel;         // Nível de ração no reservatório 1
+  uint8_t bateria;       // Bateria
+  uint8_t erro;          // leia a estrutura
 };
 
 struct diretriz_t
 {
-  int alimentID;     //ID do alimentador                       informaçao nao será usada aqui
-  int inicio_hora;            //hora de início
-  int inicio_minuto;
-  int frequencia;        //frequencia de alimentação
-  int qtd;    
+  int alimentID;          // ID do alimentador                       informaçao nao será usada aqui
+  int inicio_hora;        // Mora de início
+  int inicio_minuto;      // Minuto de início
+  int frequencia;         // Frequencia de alimentação
+  int qtd;                // Quantidade de raçao a ser despejada  
 };
 
-int atualiza = 5000;
+int atualiza = 5000;     // tempo em milissegundos para enviar os dados 
 
 void setup() {
  // serial 
@@ -80,10 +80,7 @@ void setup() {
   pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
   pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
   
-// RTC
-// temperatura
-//  sensors.begin();  
- 
+// RTC  
   Wire.begin();
    
 // comunicação
@@ -91,50 +88,44 @@ void setup() {
   mesh.setNodeID(nodeID);  
   Serial.println(F("Connecting to the mesh..."));
    //  radio.begin();
-  mesh.begin();
- 
+  mesh.begin(); 
+  
 }
-
 void loop() {
   
  
   mesh.update();
   Relogio();
-  Nivel();  
-  
+  Nivel();      
   
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, horas, minutos, nivel, 1};
+   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
   
   if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
-
-    // Send an 'M' type message containing the current millis()
-    if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
-
-      // If a write fails, check connectivity to the mesh network
-      if (!mesh.checkConnection() ) {
-        //refresh the network address
+    
+    if (!mesh.write(&pacote, 'M', sizeof(pacote))) {     
+      if (!mesh.checkConnection() ) {      
         Serial.println("Renewing Address");
         mesh.renewAddress();
       } else {
         Serial.println("Send fail, Test OK");
       }
     } else {
-      Serial.print("Conexao OK:  //// ");
-      // Serial.println(displayTimer);
-      Serial.print("   val.env ");
-      Serial.print("  1-nodeID: ");
+      Serial.print("  TX:");
+      Serial.print("  1-NodeID: ");
       Serial.print(nodeID);
-      Serial.print("  2-hora: ");
+      Serial.print("  2-Hora: ");
       Serial.print(horas);
-      Serial.print("  3-minuto: ");
+      Serial.print("  3-Minuto: ");
       Serial.print(minutos);  
-      Serial.print("  4-nivel: ");
+      Serial.print("  4-Nivel: ");
       Serial.print(nivel);
-      Serial.println("  5-temp: ");
-//      Serial.print("   ////  ");
+      Serial.print("  5-Bateria: ");
+      Serial.print("50");
+      Serial.print("  6-Erro: ");
+      Serial.print("0");
     }
   }
 
@@ -149,7 +140,8 @@ if(network.available()){
     network.read(header,&diretriz,sizeof(diretriz));
     switch(header.type){
       case 'D':
-        Serial.print("  recebe   A-ID:");
+        Serial.print("  RX:");
+        Serial.print("  A-ID:");
         Serial.print(diretriz.alimentID);
         Serial.print("  iniH:");
         Serial.print(diretriz.inicio_hora);
@@ -167,6 +159,18 @@ if(network.available()){
 
 }
 
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////// Relogio ////////////////////////////////////////////
+
 byte ConverteParaBCD(byte val){ //Converte o número de decimal para BCD
   return ( (val/10*16) + (val%10) );
 }
@@ -174,8 +178,6 @@ byte ConverteParaBCD(byte val){ //Converte o número de decimal para BCD
 byte ConverteparaDecimal(byte val)  { //Converte de BCD para decimal
   return ( (val/16*10) + (val%16) );
 }
-
-/////////////////////////////////////////////////////////// Relogio
 void Relogio()
 {
   Wire.beginTransmission(DS1307_ADDRESS);
@@ -193,10 +195,10 @@ void Relogio()
 }
 
 
-void Nivel()
-{
 
-/////////////////////////////////////////////////////////// Nível  
+//////////////////////////////////////////////////////////////////////////////// Nível 
+void Nivel()
+{ 
   /* Rotina de funionamento para o Sensor Ultrasson 1 */  
   for (int i=1; i <= 10; i++){
     digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
