@@ -85,10 +85,15 @@ void setup() {
    
 // comunicação
   SPI.begin();    
-  mesh.setNodeID(nodeID);  
-  Serial.println(F("Connecting to the mesh..."));
+ 
    //  radio.begin();
-  mesh.begin(); 
+  mesh.begin();
+  mesh.setNodeID(nodeID);  
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_1MBPS);
+  radio.setCRCLength(RF24_CRC_16);
+  radio.printDetails(); 
+  Serial.println(F("Connecting to the mesh..."));
   
 }
 void loop() {
@@ -125,7 +130,7 @@ void loop() {
       Serial.print("  5-Bateria: ");
       Serial.print("50");
       Serial.print("  6-Erro: ");
-      Serial.print("0");
+      Serial.println("0");
     }
   }
 
