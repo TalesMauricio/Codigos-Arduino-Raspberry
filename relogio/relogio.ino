@@ -5,23 +5,22 @@
 #define DS1307_ADDRESS 0x68
 
 byte zero = 0x00; 
-const int ledPin =  13; 
 
-  int segundos = 0;
-  int minutos = 0;
-  int horas = 0;
-  int diadasemana = 0;
-  int diadomes = 0;
-  int mes = 0;
-  int ano = 0;
+  uint8_t segundos = 0;
+  uint8_t minutos = 0;
+  uint8_t horas = 0;
+  uint8_t diadasemana = 0;
+  uint8_t diadomes = 0;
+  uint8_t mes = 0;
+  uint8_t ano = 0;
 
 void setup()
 {
-  pinMode(ledPin, OUTPUT);
+
   Wire.begin();
-  Serial.begin(9600);
+  Serial.begin(115200);
   //A linha abaixo pode ser retirada apos setar a data e hora
-//  SelecionaDataeHora(); 
+  SelecionaDataeHora(); 
 }
 
 void loop()
@@ -29,24 +28,17 @@ void loop()
   Mostrarelogio();
   delay(1000);
 
-if (minutos == 50) {
-    // turn LED on:
-    digitalWrite(ledPin, HIGH);
-  } else {
-    // turn LED off:
-    digitalWrite(ledPin, LOW);
-  }
   
 }
 
 void SelecionaDataeHora()   //Seta a data e a hora do DS1307
 {
   byte segundos = 06; //Valores de 0 a 59
-  byte minutos = 55; //Valores de 0 a 59
-  byte horas = 23; //Valores de 0 a 23
-  byte diadasemana = 4; //Valores de 0 a 6 - 0=Domingo, 1 = Segunda, etc.
-  byte diadomes = 14; //Valores de 1 a 31
-  byte mes = 9; //Valores de 1 a 12
+  byte minutos = 46; //Valores de 0 a 59
+  byte horas = 19; //Valores de 0 a 23
+  byte diadasemana = 2; //Valores de 0 a 6 - 0=Domingo, 1 = Segunda, etc.
+  byte diadomes = 17; //Valores de 1 a 31
+  byte mes = 10; //Valores de 1 a 12
   byte ano = 17; //Valores de 0 a 99
   Wire.beginTransmission(DS1307_ADDRESS);
   Wire.write(zero); //Stop no CI para que o mesmo possa receber os dados
@@ -99,22 +91,7 @@ void Mostrarelogio()
   Serial.print(":");
   Serial.print(minutos);
   Serial.print(":");
-  Serial.print(segundos);
-  switch(diadasemana)
-    {
-      case 0:Serial.println(", Domingo");
-      break;
-      case 1:Serial.println(", Segunda");
-      break;
-      case 2:Serial.println(", Terca");
-      break;
-      case 3:Serial.println(", Quarta");
-      break;
-      case 4:Serial.println(", Quinta");
-      break;
-      case 5:Serial.println(", Sexta");
-      break;
-      case 6:Serial.println(", Sabado");
-    }
+  Serial.println(segundos);
+ 
 }
 

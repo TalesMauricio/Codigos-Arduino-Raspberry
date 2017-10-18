@@ -16,19 +16,20 @@
 #include "Wire.h"
 #define DS1307_ADDRESS 0x68
 
-// nivel com HC-SR04
+/* / nivel com HC-SR04
 #define echoPin 6 // Pino 7 recebe o pulso do echo do Sensor 1
 #define trigPin 5 // Pino 6 envia o pulso para gerar o echo do Sensor 1
 int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 long medianivel = 0;
 uint8_t nivel;
+*/
 
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(7, 8);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
 
-#define nodeID 2  //1-255
+#define nodeID 3  //1-255
 
 byte zero = 0x00; 
 int segundos = 0;
@@ -70,15 +71,15 @@ struct diretriz_t
   int qtd;                // Quantidade de raçao a ser despejada  
 };
 
-int atualiza = 15000;     // tempo em milissegundos para enviar os dados 
+int atualiza = 5000;     // tempo em milissegundos para enviar os dados 
 
 void setup() {
  // serial 
   Serial.begin(115200);
   
 // nivel com HC-SR04
-  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
-  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
+//  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
+//  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
   
 // RTC  
   Wire.begin();
@@ -87,13 +88,12 @@ void setup() {
   SPI.begin();    
  
    //  radio.begin();
-  mesh.setNodeID(nodeID); 
   mesh.begin();
-   
+  mesh.setNodeID(nodeID);  
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_1MBPS);
   radio.setCRCLength(RF24_CRC_16);
- 
+  radio.printDetails(); 
   Serial.println(F("Connecting to the mesh..."));
   
 }
@@ -102,11 +102,11 @@ void loop() {
  
   mesh.update();
   Relogio();
-  Nivel();      
+//  Nivel();      
   
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
+   pacote_t pacote = {nodeID, horas, minutos, 33, 50, 0};
   
   if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
@@ -127,7 +127,7 @@ void loop() {
       Serial.print("  3-Minuto: ");
       Serial.print(minutos);  
       Serial.print("  4-Nivel: ");
-      Serial.print(nivel);
+      Serial.print("33");
       Serial.print("  5-Bateria: ");
       Serial.print("50");
       Serial.print("  6-Erro: ");
@@ -158,9 +158,10 @@ if(network.available()){
         Serial.print("  qtd:");
         Serial.println(diretriz.qtd);                    
         break;
-        
+                
       default: network.read(header,0,0); //Serial.println(header.type);break;
     }
+    
   } 
 
 }
@@ -203,9 +204,10 @@ void Relogio()
 
 
 //////////////////////////////////////////////////////////////////////////////// Nível 
+/*
 void Nivel()
 { 
-  /* Rotina de funionamento para o Sensor Ultrasson 1 */  
+ //  Rotina de funionamento para o Sensor Ultrasson 1   
   for (int i=1; i <= 10; i++){
     digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
     delayMicroseconds(2); // delay de 2 microssegundos
@@ -230,6 +232,6 @@ void Nivel()
   nivel = medianivel;
   medianivel = 0; 
 }
-
+*/
 
 
