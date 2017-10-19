@@ -6,13 +6,13 @@
 
 byte zero = 0x00; 
 
-  uint8_t segundos = 0;
-  uint8_t minutos = 0;
-  uint8_t horas = 0;
-  uint8_t diadasemana = 0;
-  uint8_t diadomes = 0;
-  uint8_t mes = 0;
-  uint8_t ano = 0;
+  byte segundos = 0;
+  byte minutos = 0;
+  byte horas = 0;
+  byte diadasemana = 0;
+  byte diadomes = 0;
+  byte mes = 0;
+  byte ano = 0;
 
 void setup()
 {

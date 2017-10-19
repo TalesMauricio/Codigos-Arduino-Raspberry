@@ -31,13 +31,13 @@ RF24Mesh mesh(radio, network);
 #define nodeID 2  //1-255
 
 byte zero = 0x00; 
-int segundos = 0;
-uint8_t minutos = 0;
-uint8_t horas = 0;
-int diadasemana = 0;
-int diadomes = 0;
-int mes = 0;
-int ano = 0;
+byte segundos = 0;        // Segundo atual do RTC
+byte minutos = 0;         // Minuto atual do RTC
+byte horas = 0;           // Hora atual do RTC
+byte diadasemana = 0;     // Dia da semana atual do RTC
+byte diadomes = 0;        // Dia do mes atual do RTC
+byte mes = 0;             // Mes atual do RTC
+byte ano = 0;             // Ano atual do RTC
 
 uint32_t displayTimer = 0;
 
@@ -70,7 +70,19 @@ struct diretriz_t
   int qtd;                // Quantidade de raçao a ser despejada  
 };
 
-int atualiza = 15000;     // tempo em milissegundos para enviar os dados 
+struct relogio_t
+{
+  byte segu;          // Dado para atualizar o segundo do RTC                       
+  byte minu;          // Dado para atualizar o minuto do RTC
+  byte hora;          // Dado para atualizar a hora do RTC
+  byte dias;          // Dado para atualizar o dia da semana do RTC
+  byte diam;          // Dado para atualizar o dia do mes do RTC
+  byte mess;          // Dado para atualizar o mes do RTC
+  byte anoo;          // Dado para atualizar o ano do RTC
+      
+};
+
+int atualiza = 5000;     // tempo em milissegundos para enviar os dados 
 
 void setup() {
  // serial 
@@ -102,11 +114,12 @@ void loop() {
  
   mesh.update();
   Relogio();
-  Nivel();      
+//  Nivel();      
   
 
   unsigned long now = millis();
-   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
+//   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
+     pacote_t pacote = {nodeID, horas, minutos, 90, 50, 0};
   
   if (millis() - displayTimer >= atualiza) {
     displayTimer = millis();
@@ -127,7 +140,7 @@ void loop() {
       Serial.print("  3-Minuto: ");
       Serial.print(minutos);  
       Serial.print("  4-Nivel: ");
-      Serial.print(nivel);
+//      Serial.print(nivel);
       Serial.print("  5-Bateria: ");
       Serial.print("50");
       Serial.print("  6-Erro: ");
@@ -142,10 +155,11 @@ if(network.available()){
     RF24NetworkHeader header;
     network.peek(header);    
     uint32_t dat=0;    
-    diretriz_t diretriz;
-    network.read(header,&diretriz,sizeof(diretriz));
+   
     switch(header.type){
       case 'D':
+        diretriz_t diretriz;
+        network.read(header,&diretriz,sizeof(diretriz));
         Serial.print("  RX:");
         Serial.print("  A-ID:");
         Serial.print(diretriz.alimentID);
@@ -158,15 +172,49 @@ if(network.available()){
         Serial.print("  qtd:");
         Serial.println(diretriz.qtd);                    
         break;
+      
+      case 'T':
+        relogio_t relogio;
+        network.read(header,&relogio,sizeof(relogio));
+        Serial.print("  RX - Tempo: ");
+        Serial.print(relogio.hora);
+        Serial.print(":");
+        Serial.print(relogio.minu);
+        Serial.print(":");
+        Serial.print(relogio.segu);
+        Serial.print("      dia");
+        Serial.print(relogio.diam);
+        Serial.print("/");
+        Serial.print(relogio.mess);
+        Serial.print("/");
+        Serial.print(relogio.anoo);
+        Serial.print("         semana:");
+        Serial.println(relogio.dias); 
+        
+        Wire.beginTransmission(DS1307_ADDRESS);
+        Wire.write(zero);                         //Stop no CI para que o mesmo possa receber os dados
+        Wire.write(ConverteParaBCD(relogio.segu));
+        Wire.write(ConverteParaBCD(relogio.minu));
+        Wire.write(ConverteParaBCD(relogio.hora));
+        Wire.write(ConverteParaBCD(relogio.dias));
+        Wire.write(ConverteParaBCD(relogio.diam));
+        Wire.write(ConverteParaBCD(relogio.mess));
+        Wire.write(ConverteParaBCD(relogio.anoo));
+        Wire.write(zero);                         //Start no CI
+        Wire.endTransmission(); 
+             
+        break;
         
       default: network.read(header,0,0); //Serial.println(header.type);break;
     }
   } 
 
+/*
+  if (estiver na hora de alimentar){
+função de alimentaçao
 }
-
-
-
+*/
+}
 
 
 
@@ -217,6 +265,7 @@ void Nivel()
     //////////@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    melhorar o filtro @@@@@@@@@@@@@@@@@@@@@@@@@@@@//////////
     
     long nivel_atual = tempo / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........................
+     
       if(nivel_atual <= 100){
         medianivel = (medianivel + nivel_atual);
       }
@@ -230,6 +279,9 @@ void Nivel()
   nivel = medianivel;
   medianivel = 0; 
 }
+
+
+
 
 
 
