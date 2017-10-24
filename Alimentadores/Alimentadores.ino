@@ -2,15 +2,15 @@
 /*  Projeto Crema
  *  Alimentador de peixes;
  *  
- *    
- *    
+ *   Este código é o principal. Aqui todo o algorítmo deve ser descrito por funções de alto grau de abstração. Isto é necessário para manter o
+ *   código o mais compacto o possível e possibilitar uma melhor compreensão do código como todo, sem se perder em detalhes menores. A ideia é
+ *   que da forma que for implementado, o código explique por si só, em procedimentos básicos, o algorítmo a ser desempenhado.
 */
-
-#include "RF24.h"
-#include "RF24Network.h"
-#include "RF24Mesh.h"
+  // Só devem ser declaradas as bibliotecas de funções locais de alta abstração. Nada de bibliotecas do arduino ou implementações de baixo nível
 #include <SPI.h>
 //#include <printf.h>
+#include "estruturas.cpp"
+#include "comunicacao.cpp"
 
 // RTC
 #include "Wire.h"
@@ -23,13 +23,6 @@ int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da ca
 long medianivel = 0;
 uint8_t nivel;
 
-/**** Configure the nrf24l01 CE and CS pins ****/
-RF24 radio(7, 8);
-RF24Network network(radio);
-RF24Mesh mesh(radio, network);
-
-#define nodeID 2  //1-255
-
 byte zero = 0x00; 
 byte segundos = 0;        // Segundo atual do RTC
 byte minutos = 0;         // Minuto atual do RTC
@@ -39,175 +32,36 @@ byte diadomes = 0;        // Dia do mes atual do RTC
 byte mes = 0;             // Mes atual do RTC
 byte ano = 0;             // Ano atual do RTC
 
-uint32_t displayTimer = 0;
-
-/*Estrutura do pacote a ser enviado
-erro:
-   Dec ||    Bin   ||  Código
-    1: ||      1   ||  Dados recebidos inconpativeis
-    2: ||     10   ||  Tempo de alimentação muito grande
-    4: ||    100   ||  Porta do alimntador com defeito
-    8: ||   1000   ||  Tampa do reservatório aberta
-   16: ||  10000   ||  
-
-*/
-struct pacote_t
-{
-  uint8_t alimentadorID; // ID de qual alimentador a informação está sendo enviada  
-  uint8_t hora;          // Hora que foi enviada
-  uint8_t minuto;        // Minuto que foi enviada
-  uint8_t nivel;         // Nível de ração no reservatório 1
-  uint8_t bateria;       // Bateria
-  uint8_t erro;          // leia a estrutura
-};
-
-struct diretriz_t
-{
-  int alimentID;          // ID do alimentador                       informaçao nao será usada aqui
-  int inicio_hora;        // Mora de início
-  int inicio_minuto;      // Minuto de início
-  int frequencia;         // Frequencia de alimentação
-  int qtd;                // Quantidade de raçao a ser despejada  
-};
-
-struct relogio_t
-{
-  byte segu;          // Dado para atualizar o segundo do RTC                       
-  byte minu;          // Dado para atualizar o minuto do RTC
-  byte hora;          // Dado para atualizar a hora do RTC
-  byte dias;          // Dado para atualizar o dia da semana do RTC
-  byte diam;          // Dado para atualizar o dia do mes do RTC
-  byte mess;          // Dado para atualizar o mes do RTC
-  byte anoo;          // Dado para atualizar o ano do RTC
-      
-};
-
-int atualiza = 5000;     // tempo em milissegundos para enviar os dados 
 
 void setup() {
  // serial 
   Serial.begin(115200);
   
+  configPins();
+  configRTC();
+  initComunic();
+   
+}
+
+void configPins() {
 // nivel com HC-SR04
   pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
   pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
-  
-// RTC  
-  Wire.begin();
-   
-// comunicação
-  SPI.begin();    
- 
-   //  radio.begin();
-  mesh.setNodeID(nodeID); 
-  mesh.begin();
-   
-  radio.setPALevel(RF24_PA_MAX);
-  radio.setDataRate(RF24_1MBPS);
-  radio.setCRCLength(RF24_CRC_16);
- 
-  Serial.println(F("Connecting to the mesh..."));
-  
 }
+
+void configRTC() {
+    Wire.begin();
+}
+
 void loop() {
-  
- 
+
   mesh.update();
   Relogio();
 //  Nivel();      
-  
 
-  unsigned long now = millis();
-//   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
-     pacote_t pacote = {nodeID, horas, minutos, 90, 50, 0};
-  
-  if (millis() - displayTimer >= atualiza) {
-    displayTimer = millis();
-    
-    if (!mesh.write(&pacote, 'M', sizeof(pacote))) {     
-      if (!mesh.checkConnection() ) {      
-        Serial.println("Renewing Address");
-        mesh.renewAddress();
-      } else {
-        Serial.println("Send fail, Test OK");
-      }
-    } else {
-      Serial.print("  TX:");
-      Serial.print("  1-NodeID: ");
-      Serial.print(nodeID);
-      Serial.print("  2-Hora: ");
-      Serial.print(horas);
-      Serial.print("  3-Minuto: ");
-      Serial.print(minutos);  
-      Serial.print("  4-Nivel: ");
-//      Serial.print(nivel);
-      Serial.print("  5-Bateria: ");
-      Serial.print("50");
-      Serial.print("  6-Erro: ");
-      Serial.println("0");
-    }
-  }
-
+  enviaPacote();
   delay(1000);
-
-
-if(network.available()){
-    RF24NetworkHeader header;
-    network.peek(header);    
-    uint32_t dat=0;    
-   
-    switch(header.type){
-      case 'D':
-        diretriz_t diretriz;
-        network.read(header,&diretriz,sizeof(diretriz));
-        Serial.print("  RX:");
-        Serial.print("  A-ID:");
-        Serial.print(diretriz.alimentID);
-        Serial.print("  iniH:");
-        Serial.print(diretriz.inicio_hora);
-        Serial.print("  iniM:");
-        Serial.print(diretriz.inicio_minuto);
-        Serial.print("  Freq:");
-        Serial.print(diretriz.frequencia);  
-        Serial.print("  qtd:");
-        Serial.println(diretriz.qtd);                    
-        break;
-      
-      case 'T':
-        relogio_t relogio;
-        network.read(header,&relogio,sizeof(relogio));
-        Serial.print("  RX - Tempo: ");
-        Serial.print(relogio.hora);
-        Serial.print(":");
-        Serial.print(relogio.minu);
-        Serial.print(":");
-        Serial.print(relogio.segu);
-        Serial.print("      dia");
-        Serial.print(relogio.diam);
-        Serial.print("/");
-        Serial.print(relogio.mess);
-        Serial.print("/");
-        Serial.print(relogio.anoo);
-        Serial.print("         semana:");
-        Serial.println(relogio.dias); 
-        
-        Wire.beginTransmission(DS1307_ADDRESS);
-        Wire.write(zero);                         //Stop no CI para que o mesmo possa receber os dados
-        Wire.write(ConverteParaBCD(relogio.segu));
-        Wire.write(ConverteParaBCD(relogio.minu));
-        Wire.write(ConverteParaBCD(relogio.hora));
-        Wire.write(ConverteParaBCD(relogio.dias));
-        Wire.write(ConverteParaBCD(relogio.diam));
-        Wire.write(ConverteParaBCD(relogio.mess));
-        Wire.write(ConverteParaBCD(relogio.anoo));
-        Wire.write(zero);                         //Start no CI
-        Wire.endTransmission(); 
-             
-        break;
-        
-      default: network.read(header,0,0); //Serial.println(header.type);break;
-    }
-  } 
+  recebeDiretriz();
 
 /*
   if (estiver na hora de alimentar){
@@ -215,12 +69,6 @@ função de alimentaçao
 }
 */
 }
-
-
-
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////// Relogio ////////////////////////////////////////////
