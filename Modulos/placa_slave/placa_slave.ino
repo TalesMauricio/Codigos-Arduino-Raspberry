@@ -17,7 +17,7 @@ void loop() {
 // this function is registered as an event, see setup()
 void requestEvent() {
   Wire.write(dados.bytes);
-  digitalWrite(8, HIGH);//digitalRead(8));
+  digitalWrite(8, digitalRead(8));
   dados.valor.temperatura++;
   dados.valor.ph++;
   dados.valor.turbidez++;
