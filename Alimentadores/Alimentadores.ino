@@ -11,6 +11,7 @@
 #include "RF24Mesh.h"
 #include <SPI.h>
 //#include <printf.h>
+#include "Estruturas.cpp"
 
 // RTC
 #include "Wire.h"
@@ -39,62 +40,28 @@ byte diadomes = 0;        // Dia do mes atual do RTC
 byte mes = 0;             // Mes atual do RTC
 byte ano = 0;             // Ano atual do RTC
 
-uint32_t displayTimer = 0;
-
-/*Estrutura do pacote a ser enviado
-erro:
-   Dec ||    Bin   ||  Código
-    1: ||      1   ||  Dados recebidos inconpativeis
-    2: ||     10   ||  Tempo de alimentação muito grande
-    4: ||    100   ||  Porta do alimntador com defeito
-    8: ||   1000   ||  Tampa do reservatório aberta
-   16: ||  10000   ||  
-
-*/
-struct pacote_t
-{
-  uint8_t alimentadorID; // ID de qual alimentador a informação está sendo enviada  
-  uint8_t hora;          // Hora que foi enviada
-  uint8_t minuto;        // Minuto que foi enviada
-  uint8_t nivel;         // Nível de ração no reservatório 1
-  uint8_t bateria;       // Bateria
-  uint8_t erro;          // leia a estrutura
-};
-
-struct diretriz_t
-{
-  int alimentID;          // ID do alimentador                       informaçao nao será usada aqui
-  int inicio_hora;        // Mora de início
-  int inicio_minuto;      // Minuto de início
-  int frequencia;         // Frequencia de alimentação
-  int qtd;                // Quantidade de raçao a ser despejada  
-};
-
-struct relogio_t
-{
-  byte segu;          // Dado para atualizar o segundo do RTC                       
-  byte minu;          // Dado para atualizar o minuto do RTC
-  byte hora;          // Dado para atualizar a hora do RTC
-  byte dias;          // Dado para atualizar o dia da semana do RTC
-  byte diam;          // Dado para atualizar o dia do mes do RTC
-  byte mess;          // Dado para atualizar o mes do RTC
-  byte anoo;          // Dado para atualizar o ano do RTC
-      
-};
-
-int atualiza = 5000;     // tempo em milissegundos para enviar os dados 
 
 void setup() {
  // serial 
   Serial.begin(115200);
   
+  configPins();
+  configRTC();
+  initComunic();
+   
+}
+
+void configPins() {
 // nivel com HC-SR04
   pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
   pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
-  
-// RTC  
-  Wire.begin();
-   
+}
+
+void configRTC() {
+    Wire.begin();
+}
+
+void initComunic() {
 // comunicação
   SPI.begin();    
  
@@ -107,22 +74,36 @@ void setup() {
   radio.setCRCLength(RF24_CRC_16);
  
   Serial.println(F("Connecting to the mesh..."));
-  
 }
 void loop() {
-  
- 
+
   mesh.update();
   Relogio();
 //  Nivel();      
-  
 
-  unsigned long now = millis();
-//   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
+  enviaPacote();
+  delay(1000);
+  recebeDiretriz();
+
+/*
+  if (estiver na hora de alimentar){
+função de alimentaçao
+}
+*/
+}
+
+enviaPacote() {
+    //   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
      pacote_t pacote = {nodeID, horas, minutos, 90, 50, 0};
   
-  if (millis() - displayTimer >= atualiza) {
-    displayTimer = millis();
+  #define intervalo 5000     // tempo em milissegundos para enviar os dados 
+  unsigned long past = 0;
+  unsigned long now = millis();
+  bool atualiza = false;
+
+  atualiza = (now - past) >= intervalo;
+  if (atualiza) {
+    past = now;
     
     if (!mesh.write(&pacote, 'M', sizeof(pacote))) {     
       if (!mesh.checkConnection() ) {      
@@ -147,11 +128,10 @@ void loop() {
       Serial.println("0");
     }
   }
+}
 
-  delay(1000);
-
-
-if(network.available()){
+recebeDiretriz() {
+  if(network.available()){
     RF24NetworkHeader header;
     network.peek(header);    
     uint32_t dat=0;    
@@ -209,16 +189,7 @@ if(network.available()){
     }
   } 
 
-/*
-  if (estiver na hora de alimentar){
-função de alimentaçao
 }
-*/
-}
-
-
-
-
 
 
 
