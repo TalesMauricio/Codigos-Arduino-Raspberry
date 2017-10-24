@@ -1,3 +1,4 @@
+//Aqui vai tudo relacionado a comunicação sem fio
 
 #include "RF24.h"
 #include "RF24Network.h"
