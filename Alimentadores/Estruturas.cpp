@@ -1,3 +1,6 @@
+
+#include "RF24.h"
+
 /*Estrutura do pacote a ser enviado
 erro:
    Dec ||    Bin   ||  Código

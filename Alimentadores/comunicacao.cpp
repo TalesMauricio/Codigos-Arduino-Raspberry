@@ -3,6 +3,9 @@
 #include "RF24.h"
 #include "RF24Network.h"
 #include "RF24Mesh.h"
+#include "horario.cpp"
+#include "estruturas.cpp"
+
 
 #define nodeID 2  //1-255
 
@@ -26,7 +29,7 @@ void initComunic() {
   Serial.println(F("Connecting to the mesh..."));
 }
 
-enviaPacote() {
+void enviaPacote() {
     //   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
      pacote_t pacote = {nodeID, horas, minutos, 90, 50, 0};
   
@@ -64,7 +67,7 @@ enviaPacote() {
   }
 }
 
-recebeDiretriz() {
+void recebeDiretriz() {
   if(network.available()){
     RF24NetworkHeader header;
     network.peek(header);    
