@@ -1,6 +1,4 @@
 
-#include "RF24.h"
-
 /*Estrutura do pacote a ser enviado
 erro:
    Dec ||    Bin   ||  Código
@@ -13,12 +11,12 @@ erro:
 */
 struct pacote_t
 {
-  uint8_t alimentadorID; // ID de qual alimentador a informação está sendo enviada  
-  uint8_t hora;          // Hora que foi enviada
-  uint8_t minuto;        // Minuto que foi enviada
-  uint8_t nivel;         // Nível de ração no reservatório 1
-  uint8_t bateria;       // Bateria
-  uint8_t erro;          // leia a estrutura
+  unsigned char alimentadorID; // ID de qual alimentador a informação está sendo enviada  
+  unsigned char hora;          // Hora que foi enviada
+  unsigned char minuto;        // Minuto que foi enviada
+  unsigned char nivel;         // Nível de ração no reservatório 1
+  unsigned char bateria;       // Bateria
+  unsigned char erro;          // leia a estrutura
 };
 
 struct diretriz_t
@@ -32,13 +30,13 @@ struct diretriz_t
 
 struct relogio_t
 {
-  byte segu;          // Dado para atualizar o segundo do RTC                       
-  byte minu;          // Dado para atualizar o minuto do RTC
-  byte hora;          // Dado para atualizar a hora do RTC
-  byte dias;          // Dado para atualizar o dia da semana do RTC
-  byte diam;          // Dado para atualizar o dia do mes do RTC
-  byte mess;          // Dado para atualizar o mes do RTC
-  byte anoo;          // Dado para atualizar o ano do RTC
+  unsigned char segu;          // Dado para atualizar o segundo do RTC                       
+  unsigned char minu;          // Dado para atualizar o minuto do RTC
+  unsigned char hora;          // Dado para atualizar a hora do RTC
+  unsigned char dias;          // Dado para atualizar o dia da semana do RTC
+  unsigned char diam;          // Dado para atualizar o dia do mes do RTC
+  unsigned char mess;          // Dado para atualizar o mes do RTC
+  unsigned char anoo;          // Dado para atualizar o ano do RTC
       
 };
 

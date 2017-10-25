@@ -1,5 +1,14 @@
 //Aqui vai tudo relacionado a medição de nível
 
+// nivel com HC-SR04
+
+#include <arduino.h>
+#include "pinos.h"
+
+int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
+long medianivel = 0;
+uint8_t nivel;
+
 void Nivel()
 { 
   /* Rotina de funionamento para o Sensor Ultrasson 1 */  

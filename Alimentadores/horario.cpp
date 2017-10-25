@@ -5,20 +5,20 @@
 #include "Wire.h"
 
 
-byte zero = 0x00; 
-byte segundos = 0;        // Segundo atual do RTC
-byte minutos = 0;         // Minuto atual do RTC
-byte horas = 0;           // Hora atual do RTC
-byte diadasemana = 0;     // Dia da semana atual do RTC
-byte diadomes = 0;        // Dia do mes atual do RTC
-byte mes = 0;             // Mes atual do RTC
-byte ano = 0;             // Ano atual do RTC
+char zero = 0x00; 
+char segundos = 0;        // Segundo atual do RTC
+char minutos = 0;         // Minuto atual do RTC
+char horas = 0;           // Hora atual do RTC
+char diadasemana = 0;     // Dia da semana atual do RTC
+char diadomes = 0;        // Dia do mes atual do RTC
+char mes = 0;             // Mes atual do RTC
+char ano = 0;             // Ano atual do RTC
 
-byte ConverteParaBCD(byte val){ //Converte o número de decimal para BCD
+char ConverteParaBCD(char val){ //Converte o número de decimal para BCD
   return ( (val/10*16) + (val%10) );
 }
 
-byte ConverteparaDecimal(byte val)  { //Converte de BCD para decimal
+char ConverteparaDecimal(char val)  { //Converte de BCD para decimal
   return ( (val/16*10) + (val%16) );
 }
 void Relogio()

@@ -1,11 +1,10 @@
 //Aqui vai tudo relacionado a comunicação sem fio
 
+#include "horario.cpp"
+#include "estruturas.cpp"
 #include "RF24.h"
 #include "RF24Network.h"
 #include "RF24Mesh.h"
-#include "horario.cpp"
-#include "estruturas.cpp"
-
 
 #define nodeID 2  //1-255
 

@@ -8,15 +8,8 @@
 */
   // Só devem ser declaradas as bibliotecas de funções locais de alta abstração. Nada de bibliotecas do arduino ou implementações de baixo nível
 #include <SPI.h>
-#include "pinos.h"
 #include "comunicacao.cpp"
 #include "nivel.cpp"
-
-// nivel com HC-SR04
-
-int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
-long medianivel = 0;
-uint8_t nivel;
 
 
 void setup() {
@@ -46,6 +39,17 @@ função de alimentaçao
 */
 }
 
+
+void configPins() {
+// nivel com HC-SR04
+  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
+  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
+  Wire.begin(); //RTC
+}
+
+void configRTC() {
+    
+}
 
 ////////////////////////////////////////////////////////////////////////// Relogio ////////////////////////////////////////////
 
