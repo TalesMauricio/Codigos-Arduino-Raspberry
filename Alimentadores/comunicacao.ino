@@ -1,12 +1,12 @@
 //Aqui vai tudo relacionado a comunicação sem fio
 
-#include "horario.cpp"
 #include "estruturas.cpp"
 #include "RF24.h"
 #include "RF24Network.h"
 #include "RF24Mesh.h"
 
 #define nodeID 2  //1-255
+char zero = 0x00; 
 
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(7, 8);
