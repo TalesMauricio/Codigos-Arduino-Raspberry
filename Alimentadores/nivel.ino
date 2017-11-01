@@ -1,4 +1,4 @@
-//Aqui vai tudo relacionado a medição de nível
+//Aqui vai tudo relacionado a medição de nível de profundidade
 
 int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 long medianivel = 0;
