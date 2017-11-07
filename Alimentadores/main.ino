@@ -7,52 +7,47 @@
   // Só devem ser declaradas as bibliotecas de funções locais de alta abstração. Nada de bibliotecas do arduino ou implementações de baixo nível
 
 void setup() {
- // serial 
   Serial.begin(115200);
   
   configPins();
   configRTC();
-  initComunic();
-   
+  initComunic();   
 }
 
 void loop() {
-
   mesh.update();
   Relogio();
 //  Nivel();      
 
+  requisitarMedidas();
   enviaPacote();
   delay(1000);
   recebeDiretriz();
 
-/*
-  if (estiver na hora de alimentar){
-função de alimentaçao
+  verificaHorario(diretriz);
 }
-*/
-}
-
 
 void configPins() {
-// nivel com HC-SR04
+  Wire.begin(); //I2C
+  
+  // nivel com HC-SR04
   pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
   pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
-  Wire.begin(); //RTC
+  
+  //Célula de carga
+  pinMode(ADDO, INPUT_PULLUP);   
+  pinMode(ADSK, OUTPUT);        
+  pinMode(fuso, OUTPUT);
 }
 
 void configRTC() {
     
 }
 
-////////////////////////////////////////////////////////////////////////// Relogio ////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////////// Nível 
-
-
-
-
+void verificaHorario(diretriz_t diretriz) {  //Verificar se está no horário de alimentar
+  if ((diretriz.inicio_hora==horas) && (diretriz.inicio_minuto==minutos))
+    alimentaPeixes(diretriz.qtd);
+}
 
 
 

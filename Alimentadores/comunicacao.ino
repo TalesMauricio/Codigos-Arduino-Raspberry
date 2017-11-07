@@ -1,15 +1,17 @@
 //Aqui vai tudo relacionado a comunicação sem fio
-
-#include "estruturas.cpp"
 #include "RF24.h"
 #include "RF24Network.h"
 #include "RF24Mesh.h"
 
-#define nodeID 2  //1-255
-char zero = 0x00; 
+#define nodeID  2       //1-255
+#define intervalo 5000  // tempo em milissegundos para enviar os dados 
+#define zero 0x00
+
+pacote_t pacote;
+diretriz_t diretriz;
 
 /**** Configure the nrf24l01 CE and CS pins ****/
-RF24 radio(7, 8);
+RF24 radio(9, 10);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
 
@@ -29,10 +31,8 @@ void initComunic() {
 }
 
 void enviaPacote() {
-    //   pacote_t pacote = {nodeID, horas, minutos, nivel, 50, 0};
-     pacote_t pacote = {nodeID, horas, minutos, 90, 50, 0};
-  
-  #define intervalo 5000     // tempo em milissegundos para enviar os dados 
+  pacote = {nodeID, horas, minutos, 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
+
   unsigned long past = 0;
   unsigned long now = millis();
   bool atualiza = false;
@@ -61,7 +61,17 @@ void enviaPacote() {
       Serial.print("  5-Bateria: ");
       Serial.print("50");
       Serial.print("  6-Erro: ");
-      Serial.println("0");
+      Serial.print("0");
+      Serial.print("temperatura:");
+      Serial.print(dados.valor.temperatura);
+      Serial.print("   ph:");
+      Serial.print(dados.valor.ph);
+      Serial.print("   turbidez:");
+      Serial.print(dados.valor.turbidez);
+      Serial.print("   condutividade:");
+      Serial.print(dados.valor.condutividade);
+      Serial.print("   oxigenio:");
+      Serial.println(dados.valor.oxigen);
     }
   }
 }
@@ -74,7 +84,7 @@ void recebeDiretriz() {
    
     switch(header.type){
       case 'D':
-        diretriz_t diretriz;
+        //diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
         Serial.print("  RX:");
         Serial.print("  A-ID:");
@@ -83,14 +93,14 @@ void recebeDiretriz() {
         Serial.print(diretriz.inicio_hora);
         Serial.print("  iniM:");
         Serial.print(diretriz.inicio_minuto);
-        Serial.print("  Freq:");
-        Serial.print(diretriz.frequencia);  
+        //Serial.print("  Freq:");
+        //Serial.print(diretriz.frequencia);  
         Serial.print("  qtd:");
         Serial.println(diretriz.qtd);                    
         break;
       
       case 'T':
-        relogio_t relogio;
+        //relogio_t relogio;
         network.read(header,&relogio,sizeof(relogio));
         Serial.print("  RX - Tempo: ");
         Serial.print(relogio.hora);
