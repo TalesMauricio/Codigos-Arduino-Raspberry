@@ -17,6 +17,11 @@ struct pacote_t
   unsigned char nivel;         // Nível de ração no reservatório 1
   unsigned char bateria;       // Bateria
   unsigned char erro;          // leia a estrutura
+  unsigned char temperatura;
+  unsigned char ph;
+  unsigned char turbidez;
+  unsigned char condutividade;
+  unsigned char oxigen;
 };
 
 struct diretriz_t
@@ -24,7 +29,7 @@ struct diretriz_t
   int alimentID;          // ID do alimentador                       informaçao nao será usada aqui
   int inicio_hora;        // Mora de início
   int inicio_minuto;      // Minuto de início
-  int frequencia;         // Frequencia de alimentação
+  //int frequencia;         // Frequencia de alimentação
   int qtd;                // Quantidade de raçao a ser despejada  
 };
 
