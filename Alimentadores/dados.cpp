@@ -1,11 +1,11 @@
 
 struct Dados
 {
-  uint8_t temperatura;
-  uint8_t ph;
-  uint8_t turbidez;
-  uint8_t condutividade;
-  uint8_t oxigen;
+  unsigned char temperatura;
+  unsigned char ph;
+  unsigned char turbidez;
+  unsigned char condutividade;
+  unsigned char oxigen;
 };
 
 union Dados_t
