@@ -29,11 +29,11 @@ void initComunic() {
  
   Serial.println(F("Connecting to the mesh..."));
 }
+unsigned long past = 0;
 
 void enviaPacote() {
   pacote = {nodeID, hour(), minute(), 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
 
-  unsigned long past = 0;
   unsigned long now = millis();
   bool atualiza = false;
 
