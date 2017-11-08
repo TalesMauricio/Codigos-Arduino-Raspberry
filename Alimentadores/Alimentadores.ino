@@ -7,6 +7,7 @@
 */
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
+#include <TimeLib.h>
 #include <Wire.h>
 #include "estruturas.cpp"
 #include "dados.cpp"
@@ -28,7 +29,9 @@
 
 // Declaração de estruturas globais
 Dados_t dados;
-relogio_t relogio;
+//relogio_t relogio;
+
+bool tempoSinc = false;
 
 // RTC
 char segundos = 0;        // Segundo atual do RTC

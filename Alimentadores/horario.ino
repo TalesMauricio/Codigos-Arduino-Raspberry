@@ -1,5 +1,19 @@
 //Aqui vai tudo relacionado ao RTC e ao agendamento de tarefas
 
+void sincTempo(relogio_t relogio)
+{
+    setTime(            // set time to Saturday 8:29:00am Jan 1 2011
+            relogio.hora,
+            relogio.minu,
+            relogio.segu,
+          //relogio.dias,
+            relogio.diam,
+            relogio.mess,
+            relogio.anoo);
+  
+    tempoSinc = true;
+}
+
 char ConverteParaBCD(char val){ //Converte o número de decimal para BCD
   return ( (val/10*16) + (val%10) );
 }

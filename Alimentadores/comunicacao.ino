@@ -3,7 +3,7 @@
 #include "RF24Network.h"
 #include "RF24Mesh.h"
 
-#define nodeID  2       //1-255
+#define nodeID  3       //1-255
 #define intervalo 5000  // tempo em milissegundos para enviar os dados 
 #define zero 0x00
 
@@ -31,7 +31,7 @@ void initComunic() {
 }
 
 void enviaPacote() {
-  pacote = {nodeID, horas, minutos, 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
+  pacote = {nodeID, hour(), minute(), 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
 
   unsigned long past = 0;
   unsigned long now = millis();
@@ -53,9 +53,9 @@ void enviaPacote() {
       Serial.print("  1-NodeID: ");
       Serial.print(nodeID);
       Serial.print("  2-Hora: ");
-      Serial.print(horas);
+      Serial.print(hour());
       Serial.print("  3-Minuto: ");
-      Serial.print(minutos);  
+      Serial.print(minute());  
       Serial.print("  4-Nivel: ");
 //      Serial.print(nivel);
       Serial.print("  5-Bateria: ");
@@ -100,7 +100,7 @@ void recebeDiretriz() {
         break;
       
       case 'T':
-        //relogio_t relogio;
+        relogio_t relogio;
         network.read(header,&relogio,sizeof(relogio));
         Serial.print("  RX - Tempo: ");
         Serial.print(relogio.hora);
@@ -115,19 +115,21 @@ void recebeDiretriz() {
         Serial.print("/");
         Serial.print(relogio.anoo);
         Serial.print("         semana:");
-        Serial.println(relogio.dias); 
+        Serial.println(relogio.dias);
+
+        sincTempo(relogio);
         
-        Wire.beginTransmission(DS1307_ADDRESS);
-        Wire.write(zero);                         //Stop no CI para que o mesmo possa receber os dados
-        Wire.write(ConverteParaBCD(relogio.segu));
-        Wire.write(ConverteParaBCD(relogio.minu));
-        Wire.write(ConverteParaBCD(relogio.hora));
-        Wire.write(ConverteParaBCD(relogio.dias));
-        Wire.write(ConverteParaBCD(relogio.diam));
-        Wire.write(ConverteParaBCD(relogio.mess));
-        Wire.write(ConverteParaBCD(relogio.anoo));
-        Wire.write(zero);                         //Start no CI
-        Wire.endTransmission(); 
+//        Wire.beginTransmission(DS1307_ADDRESS);
+//        Wire.write(zero);                         //Stop no CI para que o mesmo possa receber os dados
+//        Wire.write(ConverteParaBCD(relogio.segu));
+//        Wire.write(ConverteParaBCD(relogio.minu));
+//        Wire.write(ConverteParaBCD(relogio.hora));
+//        Wire.write(ConverteParaBCD(relogio.dias));
+//        Wire.write(ConverteParaBCD(relogio.diam));
+//        Wire.write(ConverteParaBCD(relogio.mess));
+//        Wire.write(ConverteParaBCD(relogio.anoo));
+//        Wire.write(zero);                         //Start no CI
+//        Wire.endTransmission(); 
              
         break;
         

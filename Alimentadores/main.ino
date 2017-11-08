@@ -11,7 +11,7 @@ void setup() {
   
   configPins();
   configRTC();
-  initComunic();   
+  initComunic();
 }
 
 void loop() {
