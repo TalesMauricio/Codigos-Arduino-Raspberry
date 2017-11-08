@@ -3,7 +3,7 @@
 #include "RF24Network.h"
 #include "RF24Mesh.h"
 
-#define nodeID  3       //1-255
+#define nodeID 3        //1-255
 #define intervalo 5000  // tempo em milissegundos para enviar os dados 
 #define zero 0x00
 
@@ -20,6 +20,7 @@ void initComunic() {
   SPI.begin();    
  
    //  radio.begin();
+  Serial.println(F("1..."));
   mesh.setNodeID(nodeID); 
   mesh.begin();
    
@@ -96,7 +97,9 @@ void recebeDiretriz() {
         //Serial.print("  Freq:");
         //Serial.print(diretriz.frequencia);  
         Serial.print("  qtd:");
-        Serial.println(diretriz.qtd);                    
+        Serial.println(diretriz.qtd);
+
+        agendarDespejo(diretriz.inicio_hora, diretriz.inicio_minuto);
         break;
       
       case 'T':

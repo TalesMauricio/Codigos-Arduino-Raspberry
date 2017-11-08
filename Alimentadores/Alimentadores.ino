@@ -6,8 +6,11 @@
  *   Isto foi feito para possibilitar a declaração de todas as funções de modo simples no arduino.
 */
 
+//#define numeroAlimentador  3       //1-5
+
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <TimeLib.h>
+#include <TimeAlarms.h>
 #include <Wire.h>
 #include "estruturas.cpp"
 #include "dados.cpp"

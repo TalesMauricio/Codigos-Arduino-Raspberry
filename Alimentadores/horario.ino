@@ -1,5 +1,7 @@
 //Aqui vai tudo relacionado ao RTC e ao agendamento de tarefas
 
+AlarmId idAgendamento;
+
 void sincTempo(relogio_t relogio)
 {
     setTime(            // set time to Saturday 8:29:00am Jan 1 2011
@@ -12,6 +14,11 @@ void sincTempo(relogio_t relogio)
             relogio.anoo);
   
     tempoSinc = true;
+}
+
+void agendarDespejo(int hora, int minuto) {
+  Serial.println("Despejo agendado!");
+  idAgendamento = Alarm.alarmRepeat(hora,minuto,0, DespejarRacao);
 }
 
 char ConverteParaBCD(char val){ //Converte o número de decimal para BCD

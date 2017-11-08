@@ -10,13 +10,13 @@ void setup() {
   Serial.begin(115200);
   
   configPins();
-  configRTC();
+  //configRTC();
   initComunic();
 }
 
 void loop() {
   mesh.update();
-  Relogio();
+  //Relogio();
 //  Nivel();      
 
   requisitarMedidas();
@@ -24,7 +24,7 @@ void loop() {
   delay(1000);
   recebeDiretriz();
 
-  verificaHorario(diretriz);
+  //verificaHorario(diretriz);
 }
 
 void configPins() {
