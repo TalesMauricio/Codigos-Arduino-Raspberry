@@ -2,8 +2,6 @@
  *  Projeto Crema
  *  Alimentador de peixes;
  *  
- *   Este não é o código principal. Os blocos setup e loop estão no arquivo (aba) main.
- *   Isto foi feito para possibilitar a declaração de todas as funções de modo simples no arduino.
 */
 
 //#define numeroAlimentador  3       //1-5

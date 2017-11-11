@@ -6,10 +6,6 @@
 
 #define nodeID 3        //1-255
 #define intervalo 5000  // tempo em milissegundos para enviar os dados 
-#define zero 0x00
-
-pacote_t pacote;
-//diretriz_t diretriz;
 
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(9, 10);
@@ -44,7 +40,7 @@ bool atualizarMalha()
 }
 
 void enviaPacote() {
-  pacote = {nodeID, hour(), minute(), 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
+  pacote_t pacote = {nodeID, hour(), minute(), 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
 
   unsigned long now = millis();
   bool atualiza = false;
