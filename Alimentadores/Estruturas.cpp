@@ -35,13 +35,23 @@ struct diretriz_t
 
 struct relogio_t
 {
-  unsigned char segu;          // Dado para atualizar o segundo do RTC                       
-  unsigned char minu;          // Dado para atualizar o minuto do RTC
-  unsigned char hora;          // Dado para atualizar a hora do RTC
-  unsigned char dias;          // Dado para atualizar o dia da semana do RTC
-  unsigned char diam;          // Dado para atualizar o dia do mes do RTC
-  unsigned char mess;          // Dado para atualizar o mes do RTC
-  unsigned char anoo;          // Dado para atualizar o ano do RTC
+  unsigned char hora, minuto, segundo;
+  unsigned char dia, mes, ano;
       
+};
+
+struct Dados
+{
+  unsigned char temperatura;
+  unsigned char ph;
+  unsigned char turbidez;
+  unsigned char condutividade;
+  unsigned char oxigen;
+};
+
+union Dados_t
+{
+    Dados valor;
+    char bytes[ sizeof(Dados) ];
 };
 

@@ -1,46 +1,39 @@
-/*
- *  Projeto Crema
- *  Alimentador de peixes;
- *  
- *   Este não é o código principal. Os blocos setup e loop estão no arquivo (aba) main.
- *   Isto foi feito para possibilitar a declaração de todas as funções de modo simples no arduino.
+
+/* 
+ *   Este código é o principal. Aqui todo o algorítmo deve ser descrito por funções de alto grau de abstração. Isto é necessário para manter o
+ *   código o mais compacto o possível e possibilitar uma melhor compreensão do código como todo, sem se perder em detalhes menores. A ideia é
+ *   que da forma que for implementado, o código explique por si só, em procedimentos básicos, o algorítmo a ser desempenhado.
 */
+  // Só devem ser declaradas as bibliotecas de funções locais de alta abstração. Nada de bibliotecas do arduino ou implementações de baixo nível
+#include "defines.h"
 
-//#define numeroAlimentador  3       //1-5
+void setup() {
+  Serial.begin(115200);
+  configPins();
+  initComunic();
+}
 
-// Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
-#include <TimeLib.h>
-#include <TimeAlarms.h>
-#include <Wire.h>
-#include "estruturas.cpp"
-#include "dados.cpp"
+void loop() {
+  atualizarMalha();  
+  requisitarMedidas();
+  enviaPacote();
+  delay(1000);
+  recebeDiretriz();
 
-/**** Real Time Clock RTC DS1307 ****/
-#define DS1307_ADDRESS 0x68
+  //verificaHorario(diretriz);
+}
 
-/**** Nivel com HC-SR04 ****/
-#define echoPin 7 // Pino 7 recebe o pulso do echo do Sensor 1
-#define trigPin 6 // Pino 6 envia o pulso para gerar o echo do Sensor 1
+void configPins() {
+  Wire.begin(); //I2C
+  
+  // nivel com HC-SR04
+  pinMode(echoPin, INPUT); // define o pino 7 como entrada (recebe)
+  pinMode(trigPin, OUTPUT); // define o pino 6 como saida (envia)
+  
+  //Célula de carga
+  pinMode(ADDO, INPUT_PULLUP);   
+  pinMode(ADSK, OUTPUT);        
+  pinMode(fuso, OUTPUT);
+}
 
-/**** Pinos da célula de carga ****/
-#define  ADDO  4  //DOUT
-#define  ADSK  3  //SCK
 
-/**** Pinos do motor(fuso) e servo(porta) ****/
-#define fuso 8
-#define servo 5
-
-// Declaração de estruturas globais
-Dados_t dados;
-//relogio_t relogio;
-
-bool tempoSinc = false;
-
-// RTC
-char segundos = 0;        // Segundo atual do RTC
-char minutos = 0;         // Minuto atual do RTC
-char horas = 0;           // Hora atual do RTC
-char diadasemana = 0;     // Dia da semana atual do RTC
-char diadomes = 0;        // Dia do mes atual do RTC
-char mes = 0;             // Mes atual do RTC
-char ano = 0;             // Ano atual do RTC

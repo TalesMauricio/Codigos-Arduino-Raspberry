@@ -1,4 +1,5 @@
 //Aqui vai tudo relacionado a comunicação sem fio
+
 #include "RF24.h"
 #include "RF24Network.h"
 #include "RF24Mesh.h"
@@ -20,16 +21,24 @@ void initComunic() {
   SPI.begin();    
  
    //  radio.begin();
-  Serial.println(F("1..."));
-  mesh.setNodeID(nodeID); 
-  mesh.begin();
-   
+  
+  mesh.setNodeID(nodeID);
+  Serial.println(F("Connecting to the mesh..."));
+
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_1MBPS);
   radio.setCRCLength(RF24_CRC_16);
- 
-  Serial.println(F("Connecting to the mesh..."));
+  mesh.begin();
+  Serial.println(F("Conectado ao master!"));
 }
+
+void atualizarMalha()
+{
+  mesh.update();
+  if(network.available())
+    Serial.println(F("Conexão perdida!"));
+}
+
 unsigned long past = 0;
 
 void enviaPacote() {
@@ -105,35 +114,8 @@ void recebeDiretriz() {
       case 'T':
         relogio_t relogio;
         network.read(header,&relogio,sizeof(relogio));
-        Serial.print("  RX - Tempo: ");
-        Serial.print(relogio.hora);
-        Serial.print(":");
-        Serial.print(relogio.minu);
-        Serial.print(":");
-        Serial.print(relogio.segu);
-        Serial.print("      dia");
-        Serial.print(relogio.diam);
-        Serial.print("/");
-        Serial.print(relogio.mess);
-        Serial.print("/");
-        Serial.print(relogio.anoo);
-        Serial.print("         semana:");
-        Serial.println(relogio.dias);
-
         sincTempo(relogio);
-        
-//        Wire.beginTransmission(DS1307_ADDRESS);
-//        Wire.write(zero);                         //Stop no CI para que o mesmo possa receber os dados
-//        Wire.write(ConverteParaBCD(relogio.segu));
-//        Wire.write(ConverteParaBCD(relogio.minu));
-//        Wire.write(ConverteParaBCD(relogio.hora));
-//        Wire.write(ConverteParaBCD(relogio.dias));
-//        Wire.write(ConverteParaBCD(relogio.diam));
-//        Wire.write(ConverteParaBCD(relogio.mess));
-//        Wire.write(ConverteParaBCD(relogio.anoo));
-//        Wire.write(zero);                         //Start no CI
-//        Wire.endTransmission(); 
-             
+        printTempo(relogio);             
         break;
         
       default: network.read(header,0,0); //Serial.println(header.type);break;
