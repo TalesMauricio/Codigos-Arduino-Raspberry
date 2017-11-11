@@ -14,12 +14,13 @@ void setup() {
 }
 
 void loop() {
-  atualizarMalha();  
-  requisitarMedidas();
-  enviaPacote();
+  bool conectado = atualizarMalha();  
+  if(conectado) {
+    recebeDiretriz();
+    enviaPacote();
+  }
   delay(1000);
-  recebeDiretriz();
-
+  //requisitarMedidas();
   //verificaHorario(diretriz);
 }
 
@@ -35,5 +36,3 @@ void configPins() {
   pinMode(ADSK, OUTPUT);        
   pinMode(fuso, OUTPUT);
 }
-
-

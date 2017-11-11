@@ -19,6 +19,21 @@ void agendarDespejo(int hora, int minuto) {
   idAgendamento = Alarm.alarmRepeat(hora,minuto,0, DespejarRacao);
 }
 
+void printDiretriz(diretriz_t diretriz)
+{
+  Serial.print("  RX:");
+  Serial.print("  A-ID:");
+  Serial.print(diretriz.alimentID);
+  Serial.print("  iniH:");
+  Serial.print(diretriz.inicio_hora);
+  Serial.print("  iniM:");
+  Serial.print(diretriz.inicio_minuto);
+  //Serial.print("  Freq:");
+  //Serial.print(diretriz.frequencia);  
+  Serial.print("  qtd:");
+  Serial.println(diretriz.qtd);
+}
+
 void printTempo(relogio_t relogio)
 {
   Serial.print("  RX - Tempo: ");

@@ -9,7 +9,7 @@
 #define zero 0x00
 
 pacote_t pacote;
-diretriz_t diretriz;
+//diretriz_t diretriz;
 
 /**** Configure the nrf24l01 CE and CS pins ****/
 RF24 radio(9, 10);
@@ -32,14 +32,16 @@ void initComunic() {
   Serial.println(F("Conectado ao master!"));
 }
 
-void atualizarMalha()
+bool atualizarMalha()
 {
   mesh.update();
-  if(network.available())
-    Serial.println(F("Conexão perdida!"));
+  if (!mesh.checkConnection() ) {      
+    Serial.println(F("Conexão perdida, renovando endereço"));
+    mesh.renewAddress();
+    return false;
+  }
+  return true;
 }
-
-unsigned long past = 0;
 
 void enviaPacote() {
   pacote = {nodeID, hour(), minute(), 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
@@ -51,38 +53,9 @@ void enviaPacote() {
   if (atualiza) {
     past = now;
     
-    if (!mesh.write(&pacote, 'M', sizeof(pacote))) {     
-      if (!mesh.checkConnection() ) {      
-        Serial.println("Renewing Address");
-        mesh.renewAddress();
-      } else {
-        Serial.println("Send fail, Test OK");
-      }
-    } else {
-      Serial.print("  TX:");
-      Serial.print("  1-NodeID: ");
-      Serial.print(nodeID);
-      Serial.print("  2-Hora: ");
-      Serial.print(hour());
-      Serial.print("  3-Minuto: ");
-      Serial.print(minute());  
-      Serial.print("  4-Nivel: ");
-//      Serial.print(nivel);
-      Serial.print("  5-Bateria: ");
-      Serial.print("50");
-      Serial.print("  6-Erro: ");
-      Serial.print("0");
-      Serial.print("temperatura:");
-      Serial.print(dados.valor.temperatura);
-      Serial.print("   ph:");
-      Serial.print(dados.valor.ph);
-      Serial.print("   turbidez:");
-      Serial.print(dados.valor.turbidez);
-      Serial.print("   condutividade:");
-      Serial.print(dados.valor.condutividade);
-      Serial.print("   oxigenio:");
-      Serial.println(dados.valor.oxigen);
-    }
+    if (!mesh.write(&pacote, 'M', sizeof(pacote)))
+      Serial.println(F("Falha ao enviar pacote"));
+    else printPacoteEnviado();
   }
 }
 
@@ -94,32 +67,45 @@ void recebeDiretriz() {
    
     switch(header.type){
       case 'D':
-        //diretriz_t diretriz;
+        diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
-        Serial.print("  RX:");
-        Serial.print("  A-ID:");
-        Serial.print(diretriz.alimentID);
-        Serial.print("  iniH:");
-        Serial.print(diretriz.inicio_hora);
-        Serial.print("  iniM:");
-        Serial.print(diretriz.inicio_minuto);
-        //Serial.print("  Freq:");
-        //Serial.print(diretriz.frequencia);  
-        Serial.print("  qtd:");
-        Serial.println(diretriz.qtd);
-
         agendarDespejo(diretriz.inicio_hora, diretriz.inicio_minuto);
-        break;
+        printDiretriz(diretriz);  break;
       
       case 'T':
         relogio_t relogio;
         network.read(header,&relogio,sizeof(relogio));
         sincTempo(relogio);
-        printTempo(relogio);             
-        break;
+        printTempo(relogio);  break;
         
-      default: network.read(header,0,0); //Serial.println(header.type);break;
+      default: network.read(header,0,0);
     }
   } 
 }
-
+//Outros prints em horario
+void printPacoteEnviado()
+{
+  Serial.print("  TX:");
+  Serial.print("  1-NodeID: ");
+  Serial.print(nodeID);
+  Serial.print("  2-Hora: ");
+  Serial.print(hour());
+  Serial.print("  3-Minuto: ");
+  Serial.print(minute());  
+//Serial.print("  4-Nivel: ");
+//Serial.print(nivel);
+  Serial.print("  5-Bateria: ");
+  Serial.print("50");
+  Serial.print("  6-Erro: ");
+  Serial.print("0");
+  Serial.print("temperatura:");
+  Serial.print(dados.valor.temperatura);
+  Serial.print("   ph:");
+  Serial.print(dados.valor.ph);
+  Serial.print("   turbidez:");
+  Serial.print(dados.valor.turbidez);
+  Serial.print("   condutividade:");
+  Serial.print(dados.valor.condutividade);
+  Serial.print("   oxigenio:");
+  Serial.println(dados.valor.oxigen);
+}

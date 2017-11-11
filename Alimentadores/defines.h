@@ -31,3 +31,4 @@ Dados_t dados;
 relogio_t relogio;
 
 bool tempoSinc = false;
+unsigned long past = 0;
