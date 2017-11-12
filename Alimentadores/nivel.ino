@@ -1,12 +1,11 @@
 //Aqui vai tudo relacionado a medição de nível de profundidade
 
-int profund = 100; // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
-long medianivel = 0;
-uint8_t nivel;
+#define profund 100  // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 
 void Nivel()
 { 
   /* Rotina de funionamento para o Sensor Ultrasson 1 */  
+  long medianivel = 0;
   for (int i=1; i <= 10; i++){
     digitalWrite(trigPin, LOW); // seta o pino 6 com um pulso baixo "LOW"
     delayMicroseconds(2); // delay de 2 microssegundos
@@ -29,7 +28,6 @@ void Nivel()
     delay(200);
   }
   medianivel = 100-(medianivel/10);
-  nivel = medianivel;
-  medianivel = 0; 
+  nivelRacao = medianivel;
 }
 

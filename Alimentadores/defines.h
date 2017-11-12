@@ -29,8 +29,10 @@
 #define servo 5
 
 // Declaração de estruturas globais
-Dados_t dados;
-relogio_t relogio;
+unsigned char nivelRacao;
+unsigned char nivelBateria;
+Sensores_t dados;
 
+bool conectado = false;
 bool tempoSinc = false;
 unsigned long past = 0;

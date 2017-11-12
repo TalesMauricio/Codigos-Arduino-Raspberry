@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop() {
-  bool conectado = atualizarMalha();  //Declarado em comunicacao
+  atualizarMalha();  //Declarado em comunicacao
   if(conectado)
   {
     recebeDiretriz();

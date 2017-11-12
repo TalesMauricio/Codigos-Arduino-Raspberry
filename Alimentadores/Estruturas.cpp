@@ -40,7 +40,7 @@ struct relogio_t
       
 };
 
-struct Dados
+struct Sensores_t
 {
   unsigned char temperatura;
   unsigned char ph;
@@ -51,7 +51,7 @@ struct Dados
 
 union Dados_t
 {
-    Dados valor;
-    char bytes[ sizeof(Dados) ];
+    Sensores_t valor;
+    char bytes[ sizeof(Sensores_t) ];
 };
 

@@ -31,15 +31,15 @@ bool atualizarMalha()
   if (!mesh.checkConnection() ) {      
     Serial.println(F("Conexão perdida, renovando endereço"));
     mesh.renewAddress();
-    return false;
+    conectado = false;
   }
-  return true;
+  conectado = true;
 }
 
 void enviaPacote() {
   pacote_t pacote = { nodeID, hour(), minute(),
                       90, 50, 0,
-                      dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
+                      dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};
   
   unsigned long now = millis();
   bool atualiza = (now - past) >= intervalo;
@@ -102,13 +102,13 @@ void printPacoteEnviado()
   Serial.print("  6-Erro: ");
   Serial.print("0");
   Serial.print("temperatura:");
-  Serial.print(dados.valor.temperatura);
+  Serial.print(dados.temperatura);
   Serial.print("   ph:");
-  Serial.print(dados.valor.ph);
+  Serial.print(dados.ph);
   Serial.print("   turbidez:");
-  Serial.print(dados.valor.turbidez);
+  Serial.print(dados.turbidez);
   Serial.print("   condutividade:");
-  Serial.print(dados.valor.condutividade);
+  Serial.print(dados.condutividade);
   Serial.print("   oxigenio:");
-  Serial.println(dados.valor.oxigen);
+  Serial.println(dados.oxigen);
 }
