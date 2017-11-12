@@ -28,5 +28,6 @@ void loop() {
     enviaPacote();
   }
   delay(1000);
-  //requisitarMedidas();
+  
+  //requMedidasSec();
 }

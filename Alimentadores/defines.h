@@ -28,7 +28,7 @@
 #define fuso 8
 #define servo 5
 
-// Declaração de estruturas globais
+// Declaração de variaveis e estruturas globais
 unsigned char nivelRacao;
 unsigned char nivelBateria;
 Sensores_t dados;
