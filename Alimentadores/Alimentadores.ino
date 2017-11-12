@@ -29,5 +29,6 @@ void loop() {
   }
   delay(1000);
   
-  //requMedidasSec();
+  medirBateria();
+  reqMedidasSec();
 }

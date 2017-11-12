@@ -5,28 +5,33 @@
 */
 
 //#define numeroAlimentador  3       //1-5
+#define profund 100  // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <Wire.h>
 #include <TimeLib.h>
 #include <TimeAlarms.h>
-#include "estruturas.cpp"
+#include "structs.cpp"
+
+/**** Pinos da célula de carga ****/
+#define  ADSK  3  //SCK
+#define  ADDO  4  //DOUT
+
+/**** Pinos do motor(fuso) e servo(porta) ****/
+#define servo 5
+#define fuso 8
+
+/**** Nivel com HC-SR04 ****/
+#define trigPin 6 // Pino 6 envia o pulso para gerar o echo do Sensor 1
+#define echoPin 7 // Pino 7 recebe o pulso do echo do Sensor 1
 
 /**** nrf24l01 pins ****/
 #define CEpin 9
 #define CSpin 10
 
-/**** Nivel com HC-SR04 ****/
-#define echoPin 7 // Pino 7 recebe o pulso do echo do Sensor 1
-#define trigPin 6 // Pino 6 envia o pulso para gerar o echo do Sensor 1
-
-/**** Pinos da célula de carga ****/
-#define  ADDO  4  //DOUT
-#define  ADSK  3  //SCK
-
-/**** Pinos do motor(fuso) e servo(porta) ****/
-#define fuso 8
-#define servo 5
+/**** Pinos da medição de bateria ****/
+#define leBatPin A0 // Pino de leitura analógica do nivel de bateria
+#define enBatPin 11  // Pino de ativação de leitura do nivel de bateria
 
 // Declaração de variaveis e estruturas globais
 unsigned char nivelRacao;
