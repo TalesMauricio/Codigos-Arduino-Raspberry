@@ -13,19 +13,16 @@ RF24Network network(radio);
 RF24Mesh mesh(radio, network);
 
 void initComunic() {
-// comunicação
   SPI.begin();    
- 
-   //  radio.begin();
-  
   mesh.setNodeID(nodeID);
   Serial.println(F("Connecting to the mesh..."));
 
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_1MBPS);
   radio.setCRCLength(RF24_CRC_16);
+  
   mesh.begin();
-  Serial.println(F("Conectado ao master!"));
+  Serial.println(F("Conectado a malha!"));
 }
 
 bool atualizarMalha()
@@ -43,17 +40,23 @@ void enviaPacote() {
   pacote_t pacote = { nodeID, hour(), minute(),
                       90, 50, 0,
                       dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
-
+  
   unsigned long now = millis();
   bool atualiza = (now - past) >= intervalo;
 
   if (atualiza) {
+    bool enviado;
     past = now;
-
     
-    if (!mesh.write(&pacote, 'M', sizeof(pacote)))
+    if( !tempoSinc )
+      enviado = mesh.write(&pacote, 'T', sizeof(pacote));//0);
+    else
+      enviado = mesh.write(&pacote, 'M', sizeof(pacote));
+    
+    if (enviado)
+      printPacoteEnviado();
+    else
       Serial.println(F("Falha ao enviar pacote"));
-    else printPacoteEnviado();
   }
 }
 
@@ -76,7 +79,9 @@ void recebeDiretriz() {
         sincTempo(relogio);
         printTempo(relogio);  break;
         
-      default: network.read(header,0,0);
+      default:
+        network.read(header,0,0);
+        Serial.println(F("Alguma coisa errada recebida..."));
     }
   } 
 }

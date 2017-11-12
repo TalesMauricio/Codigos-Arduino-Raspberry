@@ -9,7 +9,8 @@ void configPins() {
   
   //Célula de carga
   pinMode(ADDO, INPUT_PULLUP);   
-  pinMode(ADSK, OUTPUT);        
+  pinMode(ADSK, OUTPUT);
+        
   pinMode(fuso, OUTPUT);
 }
 
