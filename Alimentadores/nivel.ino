@@ -4,10 +4,10 @@ void Nivel()
 { 
   long medianivel = 0;
   for (int i=1; i <= 10; i++){
-    long duração = medirTempoEco()
+    long duracao = medirTempoEco();
     
     //////////@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    melhorar o filtro @@@@@@@@@@@@@@@@@@@@@@@@@@@@//////////
-    long nivel_atual = tempo / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........................
+    long nivel_atual = duracao / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........................
      
       if(nivel_atual <= profund)
         medianivel = (medianivel + nivel_atual);
