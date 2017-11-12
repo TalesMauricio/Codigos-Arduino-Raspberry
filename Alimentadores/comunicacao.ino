@@ -7,8 +7,8 @@
 #define nodeID 3        //1-255
 #define intervalo 5000  // tempo em milissegundos para enviar os dados 
 
-/**** Configure the nrf24l01 CE and CS pins ****/
-RF24 radio(9, 10);
+/**** Configure the communication ****/
+RF24 radio(CEpin, CSpin);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
 
@@ -40,14 +40,16 @@ bool atualizarMalha()
 }
 
 void enviaPacote() {
-  pacote_t pacote = {nodeID, hour(), minute(), 90, 50, 0, dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
+  pacote_t pacote = { nodeID, hour(), minute(),
+                      90, 50, 0,
+                      dados.valor.temperatura, dados.valor.ph, dados.valor.turbidez, dados.valor.condutividade, dados.valor.oxigen};
 
   unsigned long now = millis();
-  bool atualiza = false;
+  bool atualiza = (now - past) >= intervalo;
 
-  atualiza = (now - past) >= intervalo;
   if (atualiza) {
     past = now;
+
     
     if (!mesh.write(&pacote, 'M', sizeof(pacote)))
       Serial.println(F("Falha ao enviar pacote"));

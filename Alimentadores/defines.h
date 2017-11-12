@@ -12,6 +12,10 @@
 #include <TimeAlarms.h>
 #include "estruturas.cpp"
 
+/**** nrf24l01 pins ****/
+#define CEpin 9
+#define CSpin 10
+
 /**** Nivel com HC-SR04 ****/
 #define echoPin 7 // Pino 7 recebe o pulso do echo do Sensor 1
 #define trigPin 6 // Pino 6 envia o pulso para gerar o echo do Sensor 1
