@@ -30,8 +30,8 @@
 #define CSpin 10
 
 /**** Pinos da medição de bateria ****/
-#define leBatPin A0 // Pino de leitura analógica do nivel de bateria
-#define enBatPin 11  // Pino de ativação de leitura do nivel de bateria
+#define leBatPin A0 // (14) Pino de leitura analógica do nivel de bateria
+#define enBatPin A1  // (15) Pino de ativação de leitura do nivel de bateria
 
 // Declaração de variaveis e estruturas globais
 unsigned char nivelRacao;
