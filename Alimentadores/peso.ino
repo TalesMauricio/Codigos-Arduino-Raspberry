@@ -4,7 +4,7 @@
 float lerCelula()
 {
   unsigned long Count = 0;
-  unsigned char i;
+  uint8_t i;
   
   digitalWrite(ADSK, LOW);
   

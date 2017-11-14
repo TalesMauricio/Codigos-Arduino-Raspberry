@@ -5,6 +5,7 @@
 */
 
 //#define numeroAlimentador  3       //1-5
+//#numAgendaMax 6    // Esse valor deve ser modificado tbm em 
 #define profund 100  // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
@@ -34,8 +35,9 @@
 #define enBatPin A1  // (15) Pino de ativação de leitura do nivel de bateria
 
 // Declaração de variaveis e estruturas globais
-unsigned char nivelRacao;
-unsigned char nivelBateria;
+uint8_t nivelRacao;
+uint8_t nivelBateria;
+float qtdRacao[dtNBR_ALARMS];
 Sensores_t dados;
 
 bool conectado = false;

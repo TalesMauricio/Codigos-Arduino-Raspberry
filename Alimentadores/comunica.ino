@@ -70,7 +70,7 @@ void recebeDiretriz() {
       case 'D':
         diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
-        agendarDespejo(diretriz.inicio_hora, diretriz.inicio_minuto);
+        agendarDespejo(diretriz.inicio_hora, diretriz.inicio_minuto, diretriz.qtd);
         printDiretriz(diretriz);  break;
       
       case 'T':
@@ -95,8 +95,8 @@ void printPacoteEnviado()
   Serial.print(hour());
   Serial.print("  3-Minuto: ");
   Serial.print(minute());  
-//Serial.print("  4-Nivel: ");
-//Serial.print(nivel);
+  Serial.print("  4-Nivel: ");
+  Serial.print(nivelRacao);
   Serial.print("  5-Bateria: ");
   Serial.print("50");
   Serial.print("  6-Erro: ");

@@ -1,6 +1,4 @@
-//Aqui vai tudo relacionado ao RTC e ao agendamento de tarefas
-
-AlarmId idAgendamento;
+//Aqui vai tudo relacionado ao relógio e ao agendamento de tarefas
 
 void sincTempo(relogio_t relogio)
 {
@@ -14,9 +12,11 @@ void sincTempo(relogio_t relogio)
     tempoSinc = true;
 }
 
-void agendarDespejo(int hora, int minuto) {
+void agendarDespejo(int hora, int minuto, float massa)
+{
   Serial.println("Despejo agendado!");
-  idAgendamento = Alarm.alarmRepeat(hora,minuto,0, DespejarRacao);
+  AlarmId id = Alarm.alarmRepeat(hora,minuto,0, DespejarRacao);
+  qtdRacao[id] = massa;
 }
 
 void printDiretriz(diretriz_t diretriz)
