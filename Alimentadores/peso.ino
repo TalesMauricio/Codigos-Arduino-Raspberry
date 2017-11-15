@@ -4,13 +4,11 @@
 float lerCelula()
 {
   unsigned long Count = 0;
-  uint8_t i;
-  
   digitalWrite(ADSK, LOW);
   
   while(digitalRead(ADDO));
   
-  for(i=0;i<24;i++)
+  for(int i=0;i<24;i++)
   {
      digitalWrite(ADSK, HIGH);
      Count = Count << 1;

@@ -5,13 +5,18 @@
 */
 
 //#define numeroAlimentador  3       //1-5
-//#numAgendaMax 6    // Esse valor deve ser modificado tbm em 
 #define profund 100  // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
+#define dtNBR_ALARMS 6  //Número max. de agendamentos de despejo de ração 
+
+#define anguloPortaAbert 0
+#define anguloPortaFecha 90
+#define tempoPortaAbert 4000 // Em MS
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <Wire.h>
 #include <TimeLib.h>
 #include <TimeAlarms.h>
+
 #include "structs.cpp"
 
 /**** Pinos da célula de carga ****/

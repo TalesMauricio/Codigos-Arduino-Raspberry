@@ -70,7 +70,7 @@ void recebeDiretriz() {
       case 'D':
         diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
-        agendarDespejo(diretriz.inicio_hora, diretriz.inicio_minuto, diretriz.qtd);
+        agendarDespejo(diretriz);
         printDiretriz(diretriz);  break;
       
       case 'T':
