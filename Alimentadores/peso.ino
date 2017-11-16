@@ -6,8 +6,36 @@ const int16_t h[] = {-920, -1133, -353, 2816, 9452, 19862, 33131,
 #define hSoma 468608
 
 //Funções para o sistema de controle de alimento
+float obterPeso(float *bufferPeso)
+{
+  
+  deslocarBuffer(bufferPeso);
+  bufferPeso[0] = lerCelula();
+  
+  return filtraPeso(bufferPeso);
+}
+
+float filtraPeso(float *x)
+{
+    long y = 0;
+    for(char n=0; n<20; n++)
+        y += x[n]*h[n];
+    
+    return float(y/hSoma);
+}
+
+void deslocarBuffer(float *bufferPeso)
+{
+  for(char k=1; k<20; k++)
+  {
+    bufferPeso[k] = bufferPeso[k-1];
+  }
+}
+
+
 float lerCelula()
 {
+  long inic = millis();
   unsigned long Count = 0;
   digitalWrite(ADSK, LOW);
   
@@ -29,15 +57,9 @@ float lerCelula()
 
   //Calibrar as células de carga
   float massa = -0.0016312*float(Count)+13984.113;
-  
+
+  Serial.print("tempo decorrido: ");
+  Serial.println(inic-millis());
   return(massa);
 }
 
-float filtraPeso(float *x)
-{
-    long y = 0;
-    for(char n=0; n<20; n++)
-        y += x[n]*h[n];
-    
-    return float(y/hSoma);
-}

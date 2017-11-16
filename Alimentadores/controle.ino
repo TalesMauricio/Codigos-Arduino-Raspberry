@@ -43,10 +43,14 @@ void alimentaPeixes()
   }
 }
 
-void DespejarRacao(float valorAlimento)
+void DespejarRacao(float pesoAlimento)
 {
+  float bufferPeso[20] = {0};
+  
   digitalWrite(fuso, HIGH);
-  while(lerCelula()<=valorAlimento); //delay(100);
+  while( obterPeso(bufferPeso) <= pesoAlimento ); //delay(100);
+  
+  digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
 }
 void esvaziarCompatimento()
