@@ -34,7 +34,7 @@ void ini_prot_aliment()
   Serial.print("   ");
  if(diretriz.horad1 == hour() && diretriz.minutod1 == minute())
  {
-  alimentaPeixes(diretriz.qtdd1);
+//  alimentaPeixes(diretriz.qtdd1);
  }
 
  

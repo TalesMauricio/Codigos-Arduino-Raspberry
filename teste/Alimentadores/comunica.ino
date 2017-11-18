@@ -139,11 +139,11 @@ void printDiretriz(diretriz_t diretriz)
   Serial.print("  RX:");
   Serial.print("  A-ID:");
   Serial.print(diretriz.alimentID);
-  Serial.print("  iniH:");
+  Serial.print("  Horad1:");
   Serial.print(diretriz.horad1);
-  Serial.print("  iniM:");
+  Serial.print("  Minutod1:");
   Serial.print(diretriz.minutod1);  
-  Serial.print("  qtd:");
+  Serial.print("  qtdd1:");
   Serial.println(diretriz.qtdd1);
 }
 

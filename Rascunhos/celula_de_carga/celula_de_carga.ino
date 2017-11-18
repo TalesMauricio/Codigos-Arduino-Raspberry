@@ -8,7 +8,7 @@ unsigned long convert;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(ADDO, INPUT_PULLUP);   
   pinMode(ADSK, OUTPUT);        
   pinMode(motor, OUTPUT);
@@ -23,7 +23,7 @@ void loop()
   lerCelula();
   //alimentaPeixes(quantidadeRacao);
 
-  delay(2000);
+  delay(500);
 } 
 
 
@@ -50,7 +50,10 @@ unsigned long lerCelula()
   digitalWrite(ADSK, LOW);
 
   float massa = -0.0016312*float(Count)+13984.113;
-  Serial.println(Count);
+  
+  Serial.print(Count);
+  Serial.print("           ");
+  Serial.println(massa);
   
   return(Count);
   
