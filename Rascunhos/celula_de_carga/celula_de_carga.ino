@@ -1,11 +1,8 @@
-#define  ADDO  7  //DOUT
-#define  ADSK  6  //SCK
+#define  ADDO  4  //DOUT
+#define  ADSK  3  //SCK
 
 #define motor 13
 
-
-float lerCelula();
-void alimentaPeixes(float); 
 
 unsigned long convert;
 
@@ -23,14 +20,14 @@ void loop()
 {
   
   float quantidadeRacao = 10.0;
-
-  alimentaPeixes(quantidadeRacao);
+  lerCelula();
+  //alimentaPeixes(quantidadeRacao);
 
   delay(2000);
 } 
 
 
-float lerCelula()
+unsigned long lerCelula()
 {
   unsigned long Count = 0;
   unsigned char i;
@@ -53,8 +50,9 @@ float lerCelula()
   digitalWrite(ADSK, LOW);
 
   float massa = -0.0016312*float(Count)+13984.113;
+  Serial.println(Count);
   
-  return(massa);
+  return(Count);
   
 }
 
@@ -62,7 +60,7 @@ void alimentaPeixes(float valorAlimento)
 {
   
   digitalWrite(motor, HIGH);
-  while(lerCelula()<=valorAlimento);
+  while(lerCelula()<=valorAlimento) delay(1000);
   digitalWrite(motor, LOW);
   
 }

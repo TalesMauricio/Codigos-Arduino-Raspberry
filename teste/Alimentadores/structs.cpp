@@ -30,7 +30,7 @@ struct diretriz_t
   int inicio_hora;        // Mora de início
   int inicio_minuto;      // Minuto de início
   //int frequencia;         // Frequencia de alimentação
-  int qtd;                // Quantidade de raçao a ser despejada  
+  float qtd;                // Quantidade de raçao a ser despejada  
 };
 
 

@@ -89,9 +89,9 @@ void recebeDiretriz() {
    
     switch(header.type){
       case 'D':
-        diretriz_t diretriz;
+        //diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
-        agendarDespejo(diretriz);
+        //agendarDespejo(diretriz);
         printDiretriz(diretriz);  break;
       
       case 'T':
@@ -142,9 +142,7 @@ void printDiretriz(diretriz_t diretriz)
   Serial.print("  iniH:");
   Serial.print(diretriz.inicio_hora);
   Serial.print("  iniM:");
-  Serial.print(diretriz.inicio_minuto);
-  //Serial.print("  Freq:");
-  //Serial.print(diretriz.frequencia);  
+  Serial.print(diretriz.inicio_minuto);  
   Serial.print("  qtd:");
   Serial.println(diretriz.qtd);
 }

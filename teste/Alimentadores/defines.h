@@ -51,3 +51,5 @@ bool conectado = false;
 bool tempoSinc = false;
 unsigned long past = 0;
 
+
+
