@@ -31,7 +31,7 @@ void loop() {
   }
   delay(1000);
   
+  ini_prot_aliment();
   medirBateria();
   reqMedidasSec();
-  ini_prot_aliment();
 }

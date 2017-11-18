@@ -28,12 +28,16 @@ void configPins() {
 
 void ini_prot_aliment()
 {
- // Serial.println(diretriz.inicio_minuto);
- // Serial.println(minute());
- if(diretriz.inicio_hora == hour() && diretriz.inicio_minuto == minute())
+  Serial.print(diretriz.minutod1);
+  Serial.print("   ");  
+  Serial.print(minute());
+  Serial.print("   ");
+ if(diretriz.horad1 == hour() && diretriz.minutod1 == minute())
  {
-  alimentaPeixes(diretriz.qtd);
+  alimentaPeixes(diretriz.qtdd1);
  }
+
+ 
   
 }
 
