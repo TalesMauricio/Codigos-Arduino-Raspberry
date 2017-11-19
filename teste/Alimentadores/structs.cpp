@@ -27,22 +27,11 @@ struct pacote_t
 struct diretriz_t
 {
   unsigned int alimentID;          // ID do alimentador                       informaçao nao será usada aqui
-  unsigned int horad1;        // Mora de início
-  unsigned int minutod1;      // Minuto de início
-  //int frequencia;         // Frequencia de alimentação
-  unsigned int qtdd1;                // Quantidade de raçao a ser despejada  
+  unsigned int horad1, minutod1, qtdd1;
+  unsigned int horad2, minutod2, qtdd2;
+  unsigned int horad3, minutod3, qtdd3;
+  unsigned int horad4, minutod4, qtdd4;
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 
