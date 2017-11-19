@@ -28,14 +28,73 @@ void configPins() {
 
 void ini_prot_aliment()
 {
-  Serial.print(diretriz.minutod1);
-  Serial.print("   ");  
-  Serial.print(minute());
-  Serial.print("   ");
- if(diretriz.horad1 == hour() && diretriz.minutod1 == minute())
- {
+//  Serial.print(diretriz.minutod1);
+//  Serial.print("   ");  
+//  Serial.print(minute());
+//  Serial.print("   ");
 //  alimentaPeixes(diretriz.qtdd1);
+
+ if(diretriz.horad1 == hour() && diretriz.minutod1 == minute() && second() == 30) {
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar 1  ");
+    Serial.print(diretriz.horad1);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod1);
+    Serial.print("com : ");
+    Serial.print(diretriz.qtdd1);
+    Serial.println("kg");  
  }
+ if(diretriz.horad2 == hour() && diretriz.minutod2 == minute() && second() == 30) {
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar 2  ");
+    Serial.print(diretriz.horad2);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod2);
+    Serial.print("com : ");
+    Serial.print(diretriz.qtdd2);
+    Serial.println("kg");
+ }
+ if(diretriz.horad3 == hour() && diretriz.minutod3 == minute() && second() == 30) {
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar 3  ");
+    Serial.print(diretriz.horad3);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod3);
+    Serial.print("com : ");
+    Serial.print(diretriz.qtdd3);
+    Serial.println("kg");  
+ }
+ if(diretriz.horad4 == hour() && diretriz.minutod4 == minute() && second() == 30) {
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar 4  ");
+    Serial.print(diretriz.horad4);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod4);
+    Serial.print("com : ");
+    Serial.print(diretriz.qtdd4);
+    Serial.println("kg");
+ }
+ if(diretriz.horad5 == hour() && diretriz.minutod5 == minute() && second() == 30) {
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar 5  ");
+    Serial.print(diretriz.horad5);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod5);
+    Serial.print("com : ");
+    Serial.print(diretriz.qtdd5);
+    Serial.println("kg");  
+ }
+ if(diretriz.horad6 == hour() && diretriz.minutod6 == minute() && second() == 30) {
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar 6  ");
+    Serial.print(diretriz.horad6);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod6);
+    Serial.print("com : ");
+    Serial.print(diretriz.qtdd6);
+    Serial.println("kg");
+ }
+ 
 
  
   

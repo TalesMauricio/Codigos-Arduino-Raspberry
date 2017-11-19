@@ -31,6 +31,8 @@ struct diretriz_t
   unsigned int horad2, minutod2, qtdd2;
   unsigned int horad3, minutod3, qtdd3;
   unsigned int horad4, minutod4, qtdd4;
+  unsigned int horad5, minutod5, qtdd5;
+  unsigned int horad6, minutod6, qtdd6;
 };
 
 

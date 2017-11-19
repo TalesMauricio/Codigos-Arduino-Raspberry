@@ -14,7 +14,7 @@
   // Só devem ser declaradas as bibliotecas de funções locais de alta abstração. Nada de bibliotecas do arduino ou implementações de baixo nível
 #include "defines.h"
 
-diretriz_t diretriz = {61,61,61,61};
+diretriz_t diretriz = {61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61};
 
 void setup() {
   Serial.begin(115200);
@@ -31,7 +31,7 @@ void loop() {
   }
   delay(1000);
   
-//  ini_prot_aliment();
+  ini_prot_aliment();
 //  medirBateria();
   reqMedidasSec();
 }

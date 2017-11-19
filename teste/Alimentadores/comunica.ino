@@ -5,7 +5,7 @@
 #include "RF24Mesh.h"
 
 #define nodeID 3        //1-255
-#define intervalo 10000  // tempo em milissegundos para enviar os dados 
+#define intervalo 20000  // tempo em milissegundos para enviar os dados 
 
 /**** Configure the communication ****/
 RF24 radio(CEpin, CSpin);
@@ -139,29 +139,47 @@ void printDiretriz(diretriz_t diretriz)
   Serial.print("  RX:");
   Serial.print("  A-ID:");
   Serial.print(diretriz.alimentID);
+  
   Serial.print("  H1:");
   Serial.print(diretriz.horad1);
   Serial.print("  M1:");
   Serial.print(diretriz.minutod1);  
   Serial.print("  Q1:");
   Serial.print(diretriz.qtdd1);
+  
   Serial.print("  H2:");
   Serial.print(diretriz.horad2);
   Serial.print("  M2:");
   Serial.print(diretriz.minutod2);  
   Serial.print("  Q2:");
   Serial.print(diretriz.qtdd2);
+  
   Serial.print("  H3:");
   Serial.print(diretriz.horad3);
   Serial.print("  M3:");
   Serial.print(diretriz.minutod3);  
   Serial.print("  Q3:");
   Serial.print(diretriz.qtdd3);
+  
   Serial.print("  H4:");
   Serial.print(diretriz.horad4);
   Serial.print("  M4:");
   Serial.print(diretriz.minutod4);  
   Serial.print("  Q4:");
-  Serial.println(diretriz.qtdd4);
+  Serial.print(diretriz.qtdd4);
+  
+  Serial.print("  H5:");
+  Serial.print(diretriz.horad5);
+  Serial.print("  M5:");
+  Serial.print(diretriz.minutod5);  
+  Serial.print("  Q5:");  
+  Serial.print(diretriz.qtdd5);
+  
+  Serial.print("  H6:");
+  Serial.print(diretriz.horad6);
+  Serial.print("  M6:");
+  Serial.print(diretriz.minutod6);  
+  Serial.print("  Q6:");
+  Serial.println(diretriz.qtdd6);
 }
 
