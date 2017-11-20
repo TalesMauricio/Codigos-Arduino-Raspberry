@@ -4,7 +4,7 @@ void Nivel()
 { 
   long medianivel = 0;
   
-  for (int i=1; i <= 10; i++){
+  for (int i=1; i <= 2; i++){
     long duracao = medirTempoEco();    
     
     long nivel_atual = duracao  / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........................
@@ -17,7 +17,7 @@ void Nivel()
 //      }
     delay(200);
   }
-  medianivel = 108-(medianivel/10);
+  medianivel = 108-(medianivel/2);
   nivelRacao = medianivel;
 }
 

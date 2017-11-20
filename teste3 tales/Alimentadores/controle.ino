@@ -37,6 +37,12 @@ void ini_prot_aliment()
 
  for(int cont=1; cont<=6; cont++)
   {
+//    Serial.print("hora ");
+//    Serial.print(diretriz.horad[cont]);
+//    Serial.print(hour());
+//    Serial.print("    minuto ");
+//    Serial.print(diretriz.minutod[cont]);
+//    Serial.println(minute());
  if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && second() == 30) {
     Serial.println(" "); 
     Serial.print("chegou a hora de alimentar");
