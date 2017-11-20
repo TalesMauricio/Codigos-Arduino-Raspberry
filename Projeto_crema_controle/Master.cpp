@@ -68,7 +68,6 @@ struct relogio_t
 	uint8_t segui;
 	uint8_t minui;
 	uint8_t horai;
-	uint8_t diasi;
 	uint8_t diami;
 	uint8_t messi;
 	uint8_t anooi;
@@ -253,7 +252,6 @@ void Tx_hora_correta()
 	char segu1[3];
 	char minu1[3];
 	char hora1[3];
-	char dias1[2];
 	char diam1[3];
 	char mess1[3];
 	char anoo1[5];
@@ -263,7 +261,6 @@ void Tx_hora_correta()
 	strftime(segu1, 3, "%S", time_info);
 	strftime(minu1, 3, "%M", time_info);
 	strftime(hora1, 3, "%H", time_info);
-	strftime(dias1, 2, "%w", time_info);
 	strftime(diam1, 3, "%d", time_info);
 	strftime(mess1, 3, "%m", time_info);
 	strftime(anoo1, 5, "%g", time_info);
@@ -271,13 +268,12 @@ void Tx_hora_correta()
 	segui=atoi(segu1);
 	minui=atoi(minu1);
 	horai=atoi(hora1);
-	diasi=atoi(dias1);
 	diami=atoi(diam1);
 	messi=atoi(mess1);
 	anooi=atoi(anoo1);
 
 	mesh.update();
-	relogio = {segui, minui, horai, diasi, diami, messi, anooi};
+	relogio = {segui, minui, horai, diami, messi, anooi};
 	if (!mesh.write(&relogio, 'T', sizeof(relogio), pacote.alimentadorID))
 	{
 		printf("Nao foi possivel atualizar o relogio do alimentador %hu \n", pacote.alimentadorID);
