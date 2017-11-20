@@ -107,4 +107,3 @@ void esvaziarCompatimento()
   delay(tempoPortaAbert);
   porta.write(anguloPortaFecha);
 }
-

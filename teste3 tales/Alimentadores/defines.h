@@ -1,8 +1,13 @@
-
+/*
+ *  Projeto Crema
+ *  Alimentador de peixes;
+ *  
+*/
 
 //#define numeroAlimentador  3       //1-5
-#define profund 100  // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
-#define dtNBR_ALARMS 6  //Número max. de agendamentos de despejo de ração 
+#define profund 50      // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
+#define capacCompat 10.0 // Capacidade máxima do segundo armazenador em Kg
+#define dtNBR_ALARMS 6   // Número max. de agendamentos de despejo de ração 
 
 #define anguloPortaAbert 0
 #define anguloPortaFecha 90
@@ -37,17 +42,12 @@
 
 // Declaração de variaveis e estruturas globais
 uint8_t nivelRacao;
-long medianivel = 0;
-
 uint8_t nivelBateria;
 float qtdRacao[dtNBR_ALARMS];
 Sensores_t dados;
 
 
-
 bool conectado = false;
 bool tempoSinc = false;
 unsigned long past = 0;
-
-
 
