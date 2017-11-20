@@ -15,6 +15,7 @@ RF24Mesh mesh(radio, network);
 void initComunic() {
   SPI.begin();    
   mesh.setNodeID(nodeID);
+  while (!Serial)
   Serial.println(F("Connecting to the mesh..."));
 
   radio.setPALevel(RF24_PA_MAX);
@@ -22,7 +23,6 @@ void initComunic() {
   radio.setCRCLength(RF24_CRC_16);
   
   mesh.begin();
-//  Serial.println(F("Conectado a malha!"));
 }
 
 bool atualizarMalha()
@@ -40,37 +40,16 @@ void enviaPacote() {
   pacote_t pacote = { nodeID, hour(), minute(),
                       90, 50, 0,
                       dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};
-
- 
-    if (millis() - past >= intervalo) {
-    past = millis();
-
-     if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
-         Serial.println(F("Falha ao enviar pacote"));     
-        if (!mesh.checkConnection() ) {      
-          Serial.println("Renovando Endereço");
-          mesh.renewAddress();
-        } else {
-          Serial.println("Falha no envio, Teste OK");
-        }
-     } else {
-        printPacoteEnviado();
-    }
-    }
-  
-
   
   
-  /*
-  unsigned long now = millis();
-  bool atualiza = (now - past) >= intervalo;
+  bool atualiza = (millis() - past) >= intervalo;
 
   if (atualiza) {
     bool enviado;
-    past = now;
+    past = millis();
     
     if( !tempoSinc )
- //     enviado = mesh.write(&pacote, 'T', sizeof(pacote));//0);
+      enviado = mesh.write(&pacote, 'M', sizeof(pacote));//0);
     else
       enviado = mesh.write(&pacote, 'M', sizeof(pacote));
     
@@ -78,7 +57,7 @@ void enviaPacote() {
       printPacoteEnviado();
     else
       Serial.println(F("Falha ao enviar pacote"));
-  }*/
+  }
 }
 
 void recebeDiretriz() {
@@ -91,8 +70,8 @@ void recebeDiretriz() {
       case 'D':
         diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
-        agendarDespejo(diretriz);
-        printDiretriz(diretriz);  break;
+        printDiretriz(diretriz);
+        agendarDespejo(diretriz);  break;
       
       case 'T':
         relogio_t relogio;
@@ -109,43 +88,28 @@ void recebeDiretriz() {
 //Outros prints em horario
 void printPacoteEnviado()
 {
-  Serial.print("  TX:");
-  Serial.print("    1-NodeID: ");
+  Serial.print(F("  TX:"));
+  Serial.print(F("    1-NodeID: "));
   Serial.print(nodeID);
-  Serial.print("    2-Hora: ");
+  Serial.print(F("    2-Hora: "));
   Serial.print(hour());
-  Serial.print("    3-Minuto: ");
+  Serial.print(F("    3-Minuto: "));
   Serial.print(minute());  
-  Serial.print("    4-Nivel: ");
+  Serial.print(F("    4-Nivel: "));
   Serial.print(nivelRacao);
-  Serial.print("    5-Bateria: ");
+  Serial.print(F("    5-Bateria: "));
   Serial.print("50");
-  Serial.print("    6-Erro: ");
+  Serial.print(F("    6-Erro: "));
   Serial.print("0");
-  Serial.print("    temperatura:");
+  Serial.print(F("    temperatura:"));
   Serial.print(dados.temperatura);
-  Serial.print("    ph:");
+  Serial.print(F("    ph:"));
   Serial.print(dados.ph);
-  Serial.print("    turbidez:");
+  Serial.print(F("    turbidez:"));
   Serial.print(dados.turbidez);
-  Serial.print("    condutividade:");
+  Serial.print(F("    condutividade:"));
   Serial.print(dados.condutividade);
-  Serial.print("    oxigenio:");
+  Serial.print(F("    oxigenio:"));
   Serial.println(dados.oxigen);
-}
-
-void printDiretriz(diretriz_t diretriz)
-{
-  Serial.print("  RX:");
-  Serial.print("  A-ID:");
-  Serial.print(diretriz.alimentID);
-  Serial.print("  iniH:");
-  Serial.print(diretriz.inicio_hora);
-  Serial.print("  iniM:");
-  Serial.print(diretriz.inicio_minuto);
-  //Serial.print("  Freq:");
-  //Serial.print(diretriz.frequencia);  
-  Serial.print("  qtd:");
-  Serial.println(diretriz.qtd);
 }
 

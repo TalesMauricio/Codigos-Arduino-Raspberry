@@ -11,8 +11,15 @@ float obterPeso(float *bufferPeso)
   
   deslocarBuffer(bufferPeso);
   bufferPeso[0] = lerCelula();
+
+  float peso = filtraPeso(bufferPeso);
+
+  Serial.print(F("Peso lido: "));
+  Serial.print(peso);
+  Serial.println(F(" Kg"));
   
-  return filtraPeso(bufferPeso);
+  //return peso;
+  return 12.0;  //Valor de saída arbtrado para pular leitura da célula
 }
 
 float filtraPeso(float *x)
@@ -39,8 +46,8 @@ float lerCelula()
   unsigned long Count = 0;
   digitalWrite(ADSK, LOW);
   
-  while(digitalRead(ADDO));
-  
+  delay(500); //while(digitalRead(ADDO)); //Enquanto não tiver um sinal nessa porta, ele fica preso nesse loop
+
   for(int i=0;i<24;i++)
   {
      digitalWrite(ADSK, HIGH);
@@ -53,13 +60,14 @@ float lerCelula()
   digitalWrite(ADSK, HIGH);
   Count = Count^0x800000;
   digitalWrite(ADSK, LOW);
-  Serial.println(Count);
+  //Serial.println(Count);
 
   //Calibrar as células de carga
   float massa = -0.0016312*float(Count)+13984.113;
 
-  Serial.print("tempo decorrido: ");
-  Serial.println(inic-millis());
+  Serial.print(F("tempo decorrido de leitura da célula: "));
+  Serial.print(millis() - inic);
+  Serial.println(F(" ms"));
   return(massa);
 }
 

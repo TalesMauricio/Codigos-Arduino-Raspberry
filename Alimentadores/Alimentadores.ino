@@ -27,7 +27,7 @@ void loop() {
     recebeDiretriz();
     enviaPacote();
   }
-  delay(1000);
+  Alarm.delay(1000);
   
   medirBateria();
   reqMedidasSec();

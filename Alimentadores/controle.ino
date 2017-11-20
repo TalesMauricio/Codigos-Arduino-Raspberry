@@ -27,28 +27,32 @@ void configPins() {
 void alimentaPeixes()
 {
   AlarmId id = Alarm.getTriggeredAlarmId();
-  float valorAlimento, massa = qtdRacao[id];
+  float valorAlimento, massa = float( qtdRacao[id] );
   bool pronto = false;
-  
+
+  printAlimenta(massa);
+
   while(!pronto)
   {
-    if(massa > 10.0)
-      valorAlimento = 10.0;
+    if(massa > capacCompat) {
+      valorAlimento = capacCompat;
+      massa -= capacCompat;
+    }
     else {
       valorAlimento = massa;
       pronto = true;
     }
-    DespejarRacao(valorAlimento);
+    despejarRacao(valorAlimento);
     esvaziarCompatimento();
   }
 }
 
-void DespejarRacao(float pesoAlimento)
+void despejarRacao(float pesoAlimento)
 {
   float bufferPeso[20] = {0};
   
   digitalWrite(fuso, HIGH);
-  while( obterPeso(bufferPeso) <= pesoAlimento ); //delay(100);
+  while( obterPeso(bufferPeso) <= pesoAlimento );
   
   digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
@@ -58,5 +62,17 @@ void esvaziarCompatimento()
   porta.write(anguloPortaAbert);
   delay(tempoPortaAbert);
   porta.write(anguloPortaFecha);
+  Serial.println(F("Ração despejada"));
 }
 
+void printAlimenta(float massa) {
+  Serial.println(" ");
+  Serial.print(F("Chegou a hora de alimentar"));
+  Serial.print(F(": "));
+  Serial.print(hour());
+  Serial.print(F(": "));
+  Serial.print(minute());
+  Serial.print(F("  com : "));
+  Serial.print(massa);
+  Serial.println(F("kg"));
+ }
