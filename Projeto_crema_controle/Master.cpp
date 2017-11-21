@@ -106,6 +106,9 @@ int main(int argc, char** argv) {
 
 	while(1)
 	{
+        mesh.update();
+        mesh.DHCP();
+
 		arq = fopen("nodes.txt", "r");
 		if(arq == NULL)
 		{ // se nao foi possivel abrir o arquivo...
@@ -144,10 +147,6 @@ return 0;
 ///////////////////////////////////////////////  RX
 void Rx()
 {
-	mesh.update();
-	mesh.DHCP();
-
-
 	if(network.available())
 	{    // retirar o while
 		RF24NetworkHeader header;
@@ -219,7 +218,6 @@ void Rx()
 //////////////////////////////////////////////// TX
 void Tx()
 {
-	mesh.update();
 
 	if (!mesh.write(&diretriz, 'D', sizeof(diretriz), diretriz.alimentID))
 	{
