@@ -19,6 +19,7 @@
 #include <TimeAlarms.h>
 
 #include "structs.cpp"
+#include "secundaria/dados.cpp"
 
 /**** Pinos da célula de carga ****/
 #define  ADSK  3  //SCK
