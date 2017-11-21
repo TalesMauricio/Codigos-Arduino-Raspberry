@@ -16,10 +16,8 @@
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <Wire.h>
 #include <TimeLib.h>
-//#include <TimeAlarms.h>
+#include <TimeAlarms.h>
 
-
-diretriz_t diretriz = {61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61};
 #include "structs.cpp"
 
 /**** Pinos da célula de carga ****/
@@ -52,4 +50,5 @@ Sensores_t dados;
 bool conectado = false;
 bool tempoSinc = false;
 unsigned long past = 0;
+uint8_t flag_a[6] = {0,0,0,0,0,0}; //Flag para verificar se já alimentou naquele horário
 

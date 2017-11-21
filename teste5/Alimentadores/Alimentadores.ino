@@ -1,6 +1,7 @@
 
 #include "defines.h"
 
+diretriz_t diretriz = {61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61};
 
 void setup() {
   Serial.begin(115200);
@@ -16,8 +17,8 @@ void loop() {
     enviaPacote();
   }
   delay(50);
-  
-  ini_prot_aliment();
+  Alarm.delay(1000);
+//  ini_prot_aliment();
 //  medirBateria();
   reqMedidasSec();
 }

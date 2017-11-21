@@ -1,6 +1,7 @@
 
 #include "defines.h"
 
+diretriz_t diretriz = {61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61};
 
 void setup() {
   Serial.begin(115200);
