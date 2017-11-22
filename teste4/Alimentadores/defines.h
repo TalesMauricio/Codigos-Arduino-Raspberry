@@ -40,15 +40,25 @@
 #define leBatPin A0 // (14) Pino de leitura analógica do nivel de bateria
 #define enBatPin A1  // (15) Pino de ativação de leitura do nivel de bateria
 
+/**** Pinos da medição da tampa do reservatorio ****/
+#define tampa A2
+
+/**** Pinos da medição da rotaçao do fuso ****/
+#define rotfuso A3
+
 // Declaração de variaveis e estruturas globais
 uint8_t nivelRacao;
 uint8_t nivelBateria;
+uint8_t erro;
 float qtdRacao[dtNBR_ALARMS];
 Sensores_t dados;
 
 
 bool conectado = false;
 bool tempoSinc = false;
+bool erro_nivel = false;
+bool flag_a = false;
 unsigned long past = 0;
-uint8_t flag_a[6] = {0,0,0,0,0,0}; //Flag para verificar se já alimentou naquele horário
+unsigned long pastflag = 0;
+//uint8_t flag_a = 0; //Flag para verificar se já alimentou naquele horário
 

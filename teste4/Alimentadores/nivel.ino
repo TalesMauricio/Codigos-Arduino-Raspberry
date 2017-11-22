@@ -19,6 +19,11 @@ void Nivel()
   }
   medianivel = 108-(medianivel/2);
   nivelRacao = medianivel;
+  if (nivelRacao >= 100){
+    erro_nivel = true;
+  }else{
+     erro_nivel = false;    
+  }
 }
 
 long medirTempoEco()

@@ -6,7 +6,7 @@
 #include "RF24Mesh.h"
 
 #define nodeID 3        //1-255
-#define intervalo 15000  // tempo em milissegundos para enviar os dados 
+#define intervalo 5000  // tempo em milissegundos para enviar os dados 
 
 /**** Configure the communication ****/
 RF24 radio(CEpin, CSpin);
@@ -38,15 +38,18 @@ bool atualizarMalha()
 }
 
 void enviaPacote() {
-  Nivel();
-  pacote_t pacote = { nodeID, hour(), minute(),
-                      nivelRacao, 50, 0,
-                      dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};
-
  
+   
     if (millis() - past >= intervalo) {
     past = millis();
-
+      
+      Nivel();
+      cod_erro();
+      
+      pacote_t pacote = { nodeID, hour(), minute(),
+                      nivelRacao, 50, erro,
+                      dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};                    
+                      
      if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
          Serial.println(F("Falha ao enviar pacote"));     
         if (!mesh.checkConnection() ) {      
@@ -123,7 +126,7 @@ void printPacoteEnviado()
   Serial.print("    5-Bateria: ");
   Serial.print("50");
   Serial.print("    6-Erro: ");
-  Serial.print("0");
+  Serial.print(erro);
   Serial.print("    temperatura:");
   Serial.print(dados.temperatura);
   Serial.print("    ph:");

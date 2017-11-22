@@ -16,7 +16,7 @@ void loop() {
     recebeDiretriz();
     enviaPacote();
   }
-  delay(50);
+  delay(600);
   
   ini_prot_aliment();
 //  medirBateria();

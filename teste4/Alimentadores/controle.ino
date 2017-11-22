@@ -23,6 +23,11 @@ void configPins() {
   //medição de bateria
   pinMode(leBatPin, INPUT);   
   pinMode(enBatPin, OUTPUT);
+  
+
+  //medição de erros
+  pinMode(tampa, INPUT);   
+  pinMode(rotfuso, INPUT);
   }
 
 
@@ -43,7 +48,7 @@ void ini_prot_aliment()
 //    Serial.print("    minuto ");
 //    Serial.print(diretriz.minutod[cont]);
 //    Serial.println(minute());
- if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && flag_a[cont]==0){
+ if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && flag_a == false){
     Serial.println(" "); 
     Serial.print("chegou a hora de alimentar");
     Serial.print(cont);
@@ -54,13 +59,16 @@ void ini_prot_aliment()
     Serial.print("  com : ");
     Serial.print(diretriz.qtdd[cont]);
     Serial.println("kg");  
-
     //alimentaPeixes(diretriz.qtdd[cont]);
-    flag_a==1;
+    flag_a = true;
+    pastflag = millis();
  }
  }
- for(int cont=0; cont<6; cont++)
- if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] != minute()) flag_a[cont] = 0;
+   
+  if (millis() - pastflag >= 60000 ) {   
+     flag_a = false;    
+  }
+
 
   
 }
