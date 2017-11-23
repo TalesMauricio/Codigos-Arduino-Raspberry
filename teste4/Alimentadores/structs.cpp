@@ -21,7 +21,7 @@ struct diretriz_t
   unsigned int alimentID;          // ID do alimentador                       informaçao nao será usada aqui
   unsigned int horad[6];
   unsigned int minutod[6];
-  unsigned int qtdd[7];
+  unsigned int qtdd[6];
 };
 
 struct relogio_t

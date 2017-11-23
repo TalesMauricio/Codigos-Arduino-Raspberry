@@ -29,12 +29,14 @@ void initComunic() {
 bool atualizarMalha()
 {
   mesh.update();
+  /*
   if (!mesh.checkConnection() ) {      
     Serial.println(F("Conexão perdida, renovando endereço"));
     mesh.renewAddress();
     conectado = false;
   }
   conectado = true;
+  */
 }
 
 void enviaPacote() {
@@ -43,11 +45,12 @@ void enviaPacote() {
     if (millis() - past >= intervalo) {
     past = millis();
       
-      Nivel();
+      Nivel_ra();
+      Nivel_bat();
       cod_erro();
       
       pacote_t pacote = { nodeID, hour(), minute(),
-                      nivelRacao, 50, erro,
+                      nivelRacao, nivelBateria, erro,
                       dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};                    
                       
      if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
@@ -124,7 +127,7 @@ void printPacoteEnviado()
   Serial.print("    4-Nivel: ");
   Serial.print(nivelRacao);
   Serial.print("    5-Bateria: ");
-  Serial.print("50");
+  Serial.print(nivelBateria);
   Serial.print("    6-Erro: ");
   Serial.print(erro);
   Serial.print("    temperatura:");

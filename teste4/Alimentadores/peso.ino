@@ -1,5 +1,5 @@
 //Aqui vai tudo relacionado ao acionamento de cargas, medição e controle dos motores
-/*
+
 const int16_t h[] = {-920, -1133, -353, 2816, 9452, 19862, 33131,
                       47092, 58822, 65535, 65535, 58822, 47092,
                       33131, 19862, 9452, 2816, -353, -1133, -920};
@@ -39,7 +39,7 @@ void deslocarBuffer(float *bufferPeso)
   }
 }
 
-*/
+
 
 float lerCelula()
 //unsigned long lerCelula()
@@ -62,7 +62,7 @@ float lerCelula()
   digitalWrite(ADSK, HIGH);
   Count = Count^0x800000;
   digitalWrite(ADSK, LOW);
-  Serial.println(Count);
+  //Serial.println(Count);
 
   //Calibrar as células de carga
   float massa = -0.0016312*float(Count)+13984.113;

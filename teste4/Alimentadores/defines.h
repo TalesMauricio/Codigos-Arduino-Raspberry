@@ -48,7 +48,8 @@
 
 // Declaração de variaveis e estruturas globais
 uint8_t nivelRacao;
-uint8_t nivelBateria;
+//uint8_t nivelBateria;
+int nivelBateria;
 uint8_t erro;
 float qtdRacao[dtNBR_ALARMS];
 Sensores_t dados;
@@ -56,7 +57,7 @@ Sensores_t dados;
 
 bool conectado = false;
 bool tempoSinc = false;
-bool erro_nivel = false;
+bool erro_nivel_ra = false;
 bool flag_a = false;
 unsigned long past = 0;
 unsigned long pastflag = 0;

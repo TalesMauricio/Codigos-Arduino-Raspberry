@@ -1,6 +1,6 @@
 //Aqui vai tudo relacionado aos sensores secundários e a comunicação i2c com o outro módulo
 
-
+/*
 void medirBateria()
 {
   digitalWrite(enBatPin, HIGH);
@@ -8,7 +8,7 @@ void medirBateria()
   nivelBateria = analogRead(leBatPin);
   digitalWrite(enBatPin, LOW);
 }
-
+*/
 void reqMedidasSec()
 {
    Dados_t dado;
@@ -20,7 +20,7 @@ void reqMedidasSec()
        dado.bytes[k] = Wire.read(); // receive a byte as character 
      dados = dado.valor;
    } else {
-    dados = {0,0,0,0,0};
+    dados = {0,70,0,0,0};
    }
    
    //dados = dado.valor;

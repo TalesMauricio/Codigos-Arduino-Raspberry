@@ -1,6 +1,23 @@
-//Aqui vai tudo relacionado a medição de nível de profundidade
+//Aqui vai tudo relacionado a medição de nível de raçao e nivel de bateria
 
-void Nivel()
+void Nivel_bat()
+{
+ // digitalWrite(enBatPin, HIGH);
+ // delay(1);
+// for (int i=1; i <= 2; i++){
+//   }
+
+  nivelBateria = analogRead(leBatPin); 
+  nivelBateria = nivelBateria - (nivelBateria % 5);
+ // nivelBateria = 1.25 * nivelBateria - 938.75 ;// * nivelBateria
+//         Serial.println(" tensao da bateria ");
+//         Serial.println(nivelBateria); 
+ //  digitalWrite(enBatPin, LOW);
+}
+
+
+
+void Nivel_ra()
 { 
   long medianivel = 0;
   
@@ -20,9 +37,9 @@ void Nivel()
   medianivel = 108-(medianivel/2);
   nivelRacao = medianivel;
   if (nivelRacao >= 100){
-    erro_nivel = true;
+    erro_nivel_ra = true;
   }else{
-     erro_nivel = false;    
+     erro_nivel_ra = false;    
   }
 }
 

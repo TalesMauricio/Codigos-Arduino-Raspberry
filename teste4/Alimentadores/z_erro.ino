@@ -26,7 +26,7 @@ void cod_erro(){
 
 
 ////////////////////// erro ao medir nivel de raçao
-     if(erro_nivel == true) { 
+     if(erro_nivel_ra == true) { 
       erro = erro + 16;
      }
 

@@ -34,20 +34,9 @@ void configPins() {
 
 void ini_prot_aliment()
 {
-//  Serial.print(diretriz.minutod1);
-//  Serial.print("   ");  
-//  Serial.print(minute());
-//  Serial.print("   ");
-//  alimentaPeixes(diretriz.qtdd1);
 
  for(int cont=0; cont<6; cont++)
   {
-//    Serial.print("hora ");
-//    Serial.print(diretriz.horad[cont]);
-//    Serial.print(hour());
-//    Serial.print("    minuto ");
-//    Serial.print(diretriz.minutod[cont]);
-//    Serial.println(minute());
  if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && flag_a == false){
     Serial.println(" "); 
     Serial.print("chegou a hora de alimentar");
@@ -100,21 +89,17 @@ void alimentaPeixes(float valorAlimento)
   */
   while(valorAlimento > 10.0)
   {
-    digitalWrite(fuso, HIGH);
-    while(lerCelula() <= 10.0) delay(100);
-    digitalWrite(fuso, LOW);
+    DespejarRacao(valorAlimento);
     esvaziarCompatimento();
     
     valorAlimento = valorAlimento - 10.0;
   }
 
-  digitalWrite(fuso, HIGH);
-  while(lerCelula() <= valorAlimento) delay(100);
-  digitalWrite(fuso, LOW);
+  DespejarRacao(valorAlimento);
   esvaziarCompatimento();
 }
 
-/*
+
 void DespejarRacao(float pesoAlimento)
 {
   float bufferPeso[20] = {0};
@@ -124,7 +109,7 @@ void DespejarRacao(float pesoAlimento)
   
   digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
-}*/
+}
 
 void esvaziarCompatimento()
 {

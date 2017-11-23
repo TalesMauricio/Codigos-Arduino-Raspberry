@@ -11,14 +11,16 @@ void setup() {
 
 void loop() {
   atualizarMalha();  //Declarado em comunicacao
-  if(conectado)
-  {
-    recebeDiretriz();
-    enviaPacote();
-  }
-  delay(600);
+
+ // if(conectado)
+ // {
+  recebeDiretriz();
+  enviaPacote();
+ // }
+  delay(60);
   
   ini_prot_aliment();
+//  Nivel_bat();
 //  medirBateria();
   reqMedidasSec();
 }
