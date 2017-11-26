@@ -147,23 +147,21 @@ h = [ -0.005518034512137216
 -0.0011715558702631759
 -0.0010814112228576655
 -0.005518034512137216
-
-
 ];
 
 s = sum(h);
 freqz(h/s,1,500)
-h = ceil(h*(2^16-1)/max(h))
+h = floor(h*(2^8-1)/max(h))
 figure
-s = sum(h)
-freqz(h/s,1,500)
+divisor = sum(h)
+freqz(h/divisor,1,500)
 
 fs = 10;
-tf = 5;
+tf = 60;
 N = tf*fs;
 t = 0:1/fs:tf;
 
-x = (0:N)*10/N + 2*rand(1,N+1)-1;
+x = (0:N)*10/N + 2*rand(1,N+1)-1 + 2*sin(2*pi*0.2*t);
 y = zeros(N+1,1);
 
 for n = 1:N+1
