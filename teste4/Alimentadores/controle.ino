@@ -18,6 +18,7 @@ void configPins() {
   
   //motor(fuso) e servo(porta) ****/
   pinMode(fuso, OUTPUT);
+  pinMode(enServo, OUTPUT);
   porta.attach(servo);
   
   //medição de bateria
@@ -27,7 +28,7 @@ void configPins() {
 
   //medição de erros
   pinMode(tampa, INPUT);   
-  pinMode(rotfuso, INPUT);
+//  pinMode(rotfuso, INPUT);
   }
 
 
@@ -49,8 +50,25 @@ void ini_prot_aliment()
     Serial.print(diretriz.qtdd[cont]);
     Serial.println("kg");  
     //alimentaPeixes(diretriz.qtdd[cont]);
+    
+    
+    porta.write(anguloPortaFecha);
+    digitalWrite(enServo, HIGH);
+    delay(2000);
+    
+    digitalWrite(fuso, HIGH);
+    while( lerCelula() >= 8280000 ); //delay(100);
+  
+    digitalWrite(ADSK, HIGH);
+    digitalWrite(fuso, LOW);
+    esvaziarCompatimento();
+    
     flag_a = true;
     pastflag = millis();
+
+    delay(2000);
+    digitalWrite(enServo, LOW);
+        
  }
  }
    

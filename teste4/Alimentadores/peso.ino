@@ -41,7 +41,8 @@ void deslocarBuffer(float *bufferPeso)
 
 
 
-float lerCelula()
+//float lerCelula()
+unsigned long lerCelula()
 //unsigned long lerCelula()
 {
   //long inic = millis();
@@ -70,6 +71,7 @@ float lerCelula()
   //Serial.print("tempo decorrido: ");
   //Serial.println(inic-millis());
   
-  return(massa);
+  return(Count);
+  //return(massa);
 }
 

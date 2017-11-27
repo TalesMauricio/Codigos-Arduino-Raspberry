@@ -6,7 +6,7 @@
 #include "RF24Mesh.h"
 
 #define nodeID 3        //1-255
-#define intervalo 5000  // tempo em milissegundos para enviar os dados 
+#define intervalo 10000  // tempo em milissegundos para enviar os dados 
 
 /**** Configure the communication ****/
 RF24 radio(CEpin, CSpin);
@@ -41,12 +41,12 @@ bool atualizarMalha()
 
 void enviaPacote() {
  
-   
+    if (millis() - pastbat >= 60000) {
+    pastbat = millis();
+     Nivel_bat();      
+    }
     if (millis() - past >= intervalo) {
-    past = millis();
-      
-      Nivel_ra();
-      Nivel_bat();
+    past = millis();           
       cod_erro();
       
       pacote_t pacote = { nodeID, hour(), minute(),
@@ -63,6 +63,7 @@ void enviaPacote() {
         }
      } else {
         printPacoteEnviado();
+        Nivel_ra();
     }
     }
   

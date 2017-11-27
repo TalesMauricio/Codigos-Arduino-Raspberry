@@ -2,17 +2,17 @@
 
 void Nivel_bat()
 {
- // digitalWrite(enBatPin, HIGH);
- // delay(1);
-// for (int i=1; i <= 2; i++){
-//   }
-
-  nivelBateria = analogRead(leBatPin); 
-  nivelBateria = nivelBateria - (nivelBateria % 5);
- // nivelBateria = 1.25 * nivelBateria - 938.75 ;// * nivelBateria
-//         Serial.println(" tensao da bateria ");
-//         Serial.println(nivelBateria); 
- //  digitalWrite(enBatPin, LOW);
+  digitalWrite(enBatPin, HIGH);
+  delay(1500);
+  double media_nivelBateria =0;
+  int Bater = 0;  
+  for (int i=1; i <= 10; i++){    
+      Bater = analogRead(leBatPin); 
+      media_nivelBateria = media_nivelBateria + ((Bater - 24)/10) ;
+      delay(50);
+      }
+  nivelBateria = (media_nivelBateria/10); 
+  digitalWrite(enBatPin, LOW);
 }
 
 
@@ -20,23 +20,38 @@ void Nivel_bat()
 void Nivel_ra()
 { 
   long medianivel = 0;
+  int repetir = 10;
+  int contagem = 10;
+  int erro_r = 0;
   
-  for (int i=1; i <= 2; i++){
-    long duracao = medirTempoEco();    
+  for (int i=1; i <= contagem; i++){
+    long duracao = medirTempoEco();   
+// teste   
     
-    long nivel_atual = duracao  / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........................
-     
-//      if(nivel_atual <= profund)
+    
+    
+// teste    
+    
+//    long nivel_atual = duracao  / 58 *100 / profund ; //Esse calculo é baseado em s = v . t, lembrando que o tempo vem dobrado ///// distancia = tempo / (29 * 2)//// ..........   
+    long nivel_atual = duracao  / 58;
+      if(nivel_atual <= profund){
         medianivel = (medianivel + nivel_atual);
-//      else{
-//        i--;
-//        delay(100);
-//      }
-    delay(200);
+        contagem + 2;
+        repetir - 2;
+//        delay(350); 
+      }
+      else{
+        repetir --;
+        erro_r ++;
+//        delay(350);        
+      }
+    delay(300);
   }
-  medianivel = 108-(medianivel/2);
+ // medianivel = 100-(medianivel/repetir);
+  medianivel = (100-(((medianivel/repetir)*100)/profund));
+  // medianivel = 100-(medianivel/6);
   nivelRacao = medianivel;
-  if (nivelRacao >= 100){
+  if (erro_r >= 5){
     erro_nivel_ra = true;
   }else{
      erro_nivel_ra = false;    

@@ -7,6 +7,8 @@ void setup() {
   Serial.begin(115200);
   configPins();  //Declarado em controle
   initComunic(); //Declarado em comunicacao
+   Nivel_bat();
+   Nivel_ra(); 
 }
 
 void loop() {

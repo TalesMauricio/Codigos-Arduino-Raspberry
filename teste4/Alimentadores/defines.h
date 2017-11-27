@@ -5,12 +5,12 @@
 */
 
 //#define numeroAlimentador  3       //1-5
-#define profund 50      // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
+#define profund 64      // profundidade da caixa (aqui vc coloca a pronfudidade da caixa em CM)
 #define capacCompat 10.0 // Capacidade máxima do segundo armazenador em Kg
 #define dtNBR_ALARMS 6   // Número max. de agendamentos de despejo de ração 
 
-#define anguloPortaAbert 0
-#define anguloPortaFecha 90
+#define anguloPortaAbert 60
+#define anguloPortaFecha 0
 #define tempoPortaAbert 4000 // Em MS
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
@@ -26,6 +26,7 @@
 
 /**** Pinos do motor(fuso) e servo(porta) ****/
 #define servo 5
+#define enServo 2
 #define fuso 8
 
 /**** Nivel com HC-SR04 ****/
@@ -37,14 +38,15 @@
 #define CSpin 10
 
 /**** Pinos da medição de bateria ****/
-#define leBatPin A0 // (14) Pino de leitura analógica do nivel de bateria
-#define enBatPin A1  // (15) Pino de ativação de leitura do nivel de bateria
+#define leBatPin A1 // (14) Pino de leitura analógica do nivel de bateria
+#define enBatPin A0  // (15) Pino de ativação de leitura do nivel de bateria
 
 /**** Pinos da medição da tampa do reservatorio ****/
 #define tampa A2
 
 /**** Pinos da medição da rotaçao do fuso ****/
-#define rotfuso A3
+// nao  mais #define rotfuso A3
+// a3 = vibra
 
 // Declaração de variaveis e estruturas globais
 uint8_t nivelRacao;
@@ -61,5 +63,6 @@ bool erro_nivel_ra = false;
 bool flag_a = false;
 unsigned long past = 0;
 unsigned long pastflag = 0;
+unsigned long pastbat = 0;
 //uint8_t flag_a = 0; //Flag para verificar se já alimentou naquele horário
 
