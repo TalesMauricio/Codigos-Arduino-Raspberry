@@ -10,7 +10,6 @@ void setup() {
   pinMode(ADSK, OUTPUT);
 }
 
-float bufferPeso[20] = {0};
 
 void loop() {
   obterPeso();
