@@ -49,25 +49,12 @@ void ini_prot_aliment()
     Serial.print("  com : ");
     Serial.print(diretriz.qtdd[cont]);
     Serial.println("kg");  
-    //alimentaPeixes(diretriz.qtdd[cont]);
-    
-    
-    porta.write(anguloPortaFecha);
-    digitalWrite(enServo, HIGH);
-    delay(2000);
-    
-    digitalWrite(fuso, HIGH);
-    while( lerCelula() >= 8280000 ); //delay(100);
-  
-    digitalWrite(ADSK, HIGH);
-    digitalWrite(fuso, LOW);
-    esvaziarCompatimento();
+    alimentaPeixes(float(diretriz.qtdd[cont]));
+
+
     
     flag_a = true;
     pastflag = millis();
-
-    delay(2000);
-    digitalWrite(enServo, LOW);
         
  }
  }
@@ -105,16 +92,23 @@ void alimentaPeixes(float valorAlimento)
     esvaziarCompatimento();
   }
   */
-  while(valorAlimento > 10.0)
-  {
-    DespejarRacao(valorAlimento);
-    esvaziarCompatimento();
-    
-    valorAlimento = valorAlimento - 10.0;
-  }
+//  valorAlimento = valorAlimento/10;
+//  while(valorAlimento > 10.0)
+//  {
+//    DespejarRacao(valorAlimento);
+//    esvaziarCompatimento();
+//    
+//    valorAlimento = valorAlimento - 10.0;
+//  }
+//
+//  DespejarRacao(valorAlimento);
+//  esvaziarCompatimento();
 
-  DespejarRacao(valorAlimento);
-  esvaziarCompatimento();
+  digitalWrite(fuso, HIGH);
+  //while( obterPeso(bufferPeso) <= pesoAlimento ); //delay(100);
+  delay(5000);
+  digitalWrite(ADSK, HIGH);
+  digitalWrite(fuso, LOW);
 }
 
 
@@ -131,7 +125,14 @@ void DespejarRacao(float pesoAlimento)
 
 void esvaziarCompatimento()
 {
+  porta.write(anguloPortaFecha);
+  delay(2000);
+  digitalWrite(enServo, HIGH);
   porta.write(anguloPortaAbert);
   delay(tempoPortaAbert);
   porta.write(anguloPortaFecha);
+  delay(2000);
+  digitalWrite(enServo, LOW);
 }
+
+

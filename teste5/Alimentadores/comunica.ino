@@ -6,7 +6,7 @@
 #include "RF24Mesh.h"
 
 #define nodeID 3        //1-255
-#define intervalo 15000  // tempo em milissegundos para enviar os dados 
+#define intervalo 6000  // tempo em milissegundos para enviar os dados 
 
 /**** Configure the communication ****/
 RF24 radio(CEpin, CSpin);
@@ -29,24 +29,30 @@ void initComunic() {
 bool atualizarMalha()
 {
   mesh.update();
+  /*
   if (!mesh.checkConnection() ) {      
     Serial.println(F("Conexão perdida, renovando endereço"));
     mesh.renewAddress();
     conectado = false;
   }
   conectado = true;
+  */
 }
 
 void enviaPacote() {
-  Nivel();
-  pacote_t pacote = { nodeID, hour(), minute(),
-                      nivelRacao, 50, 0,
-                      dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};
-
  
+    if (millis() - pastbat >= 60000) {
+    pastbat = millis();
+     Nivel_bat();      
+    }
     if (millis() - past >= intervalo) {
-    past = millis();
-
+    past = millis();           
+      cod_erro();
+      
+      pacote_t pacote = { nodeID, hour(), minute(),
+                      nivelRacao, nivelBateria, erro,
+                      dados.temperatura, dados.ph, dados.turbidez, dados.condutividade, dados.oxigen};                    
+                      
      if (!mesh.write(&pacote, 'M', sizeof(pacote))) {
          Serial.println(F("Falha ao enviar pacote"));     
         if (!mesh.checkConnection() ) {      
@@ -57,6 +63,7 @@ void enviaPacote() {
         }
      } else {
         printPacoteEnviado();
+        Nivel_ra();
     }
     }
   
@@ -93,7 +100,7 @@ void recebeDiretriz() {
       case 'D':
         //diretriz_t diretriz;
         network.read(header,&diretriz,sizeof(diretriz));
-        agendarDespejo(diretriz);
+        //agendarDespejo(diretriz);
         printDiretriz(diretriz);  break;
       
       case 'T':
@@ -121,9 +128,9 @@ void printPacoteEnviado()
   Serial.print("    4-Nivel: ");
   Serial.print(nivelRacao);
   Serial.print("    5-Bateria: ");
-  Serial.print("50");
+  Serial.print(nivelBateria);
   Serial.print("    6-Erro: ");
-  Serial.print("0");
+  Serial.print(erro);
   Serial.print("    temperatura:");
   Serial.print(dados.temperatura);
   Serial.print("    ph:");

@@ -12,20 +12,31 @@ void sincTempo(relogio_t relogio)
   
     tempoSinc = true;
 }
-
+/*
 void agendarDespejo(diretriz_t d)
 {
-  //mandar função para apagar os alarmes aqui
-  
-  for(int cont=0; cont<6; cont++)
-  {
-    AlarmId id = Alarm.alarmRepeat(d.horad[cont],d.minutod[cont],0, alimentaPeixes);
-    qtdRacao[id] = d.qtdd[cont];
-  }
-
-  
+  AlarmId id = Alarm.alarmRepeat(d.inicio_hora,d.inicio_minuto,0, alimentaPeixes);
+  qtdRacao[id] = d.qtd;
   Serial.println("Despejo agendado!");
 }
+*/
+//iii
+/*
+void printDiretriz(diretriz_t diretriz)
+{
+  Serial.print("  RX:");
+  Serial.print("  A-ID:");
+  Serial.print(diretriz.alimentID);
+  Serial.print("  iniH:");
+  Serial.print(diretriz.inicio_hora);
+  Serial.print("  iniM:");
+  Serial.print(diretriz.inicio_minuto);
+  //Serial.print("  Freq:");
+  //Serial.print(diretriz.frequencia);  
+  Serial.print("  qtd:");
+  Serial.println(diretriz.qtd);
+}
+*/
 
 
 void printTempo(relogio_t relogio)

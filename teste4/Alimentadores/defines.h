@@ -64,5 +64,6 @@ bool flag_a = false;
 unsigned long past = 0;
 unsigned long pastflag = 0;
 unsigned long pastbat = 0;
+unsigned long tara = 0;
 //uint8_t flag_a = 0; //Flag para verificar se já alimentou naquele horário
 

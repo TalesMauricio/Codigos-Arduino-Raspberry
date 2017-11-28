@@ -1,15 +1,6 @@
 
 #include <arduino.h>
-/*Estrutura do pacote a ser enviado
-erro:
-   Dec ||    Bin   ||  Código
-    1: ||      1   ||  Dados recebidos inconpativeis
-    2: ||     10   ||  Tempo de alimentação muito grande
-    4: ||    100   ||  Porta do alimntador com defeito
-    8: ||   1000   ||  Tampa do reservatório aberta
-   16: ||  10000   ||  
 
-*/
 struct pacote_t
 {
   uint8_t alimentadorID; // ID de qual alimentador a informação está sendo enviada  

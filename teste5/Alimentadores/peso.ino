@@ -40,6 +40,7 @@ void deslocarBuffer(float *bufferPeso)
 }
 
 
+
 float lerCelula()
 //unsigned long lerCelula()
 {
@@ -61,10 +62,10 @@ float lerCelula()
   digitalWrite(ADSK, HIGH);
   Count = Count^0x800000;
   digitalWrite(ADSK, LOW);
-  Serial.println(Count);
+  //Serial.println(Count);
 
   //Calibrar as células de carga
-  float massa = -0.0016312*float(Count)+13984.113;
+  float massa = -0.0011*float(Count)+918.45363;
 
   //Serial.print("tempo decorrido: ");
   //Serial.println(inic-millis());

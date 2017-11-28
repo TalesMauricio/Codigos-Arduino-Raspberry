@@ -7,18 +7,22 @@ void setup() {
   Serial.begin(115200);
   configPins();  //Declarado em controle
   initComunic(); //Declarado em comunicacao
+   Nivel_bat();
+   Nivel_ra(); 
 }
 
 void loop() {
   atualizarMalha();  //Declarado em comunicacao
-  if(conectado)
-  {
-    recebeDiretriz();
-    enviaPacote();
-  }
-  delay(50);
-  Alarm.delay(1000);
-//  ini_prot_aliment();
+
+ // if(conectado)
+ // {
+  recebeDiretriz();
+  enviaPacote();
+ // }
+  delay(60);
+  
+  ini_prot_aliment();
+//  Nivel_bat();
 //  medirBateria();
   reqMedidasSec();
 }

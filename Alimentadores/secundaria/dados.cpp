@@ -1,3 +1,4 @@
+#include<arduino.h>
 
 struct Sensores_t
 {
