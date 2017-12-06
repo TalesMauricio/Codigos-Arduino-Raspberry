@@ -6,7 +6,7 @@
 #include "RF24Mesh.h"
 
 #define nodeID 3        //1-255
-#define intervalo 5000  // tempo em milissegundos para enviar os dados 
+#define intervalo 6000  // tempo em milissegundos para enviar os dados 
 
 /**** Configure the communication ****/
 RF24 radio(CEpin, CSpin);

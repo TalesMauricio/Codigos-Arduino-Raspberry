@@ -5,8 +5,8 @@
 #include "RF24Network.h"
 #include "RF24Mesh.h"
 
-#define nodeID 3        //1-255
-#define intervalo 5000  // tempo em milissegundos para enviar os dados 
+#define nodeID 2        //1-255
+#define intervalo 6000  // tempo em milissegundos para enviar os dados 
 
 /**** Configure the communication ****/
 RF24 radio(CEpin, CSpin);
@@ -16,7 +16,7 @@ RF24Mesh mesh(radio, network);
 void initComunic() {
   SPI.begin();    
   mesh.setNodeID(nodeID);
-  Serial.println(F("Connecting to the mesh..."));
+  Serial.println(F("Conectando..."));
 
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_1MBPS);
@@ -43,7 +43,8 @@ void enviaPacote() {
  
     if (millis() - pastbat >= 60000) {
     pastbat = millis();
-     Nivel_bat();      
+     Nivel_bat(); 
+      Nivel_ra();     
     }
     if (millis() - past >= intervalo) {
     past = millis();           
@@ -63,7 +64,7 @@ void enviaPacote() {
         }
      } else {
         printPacoteEnviado();
-        Nivel_ra();
+       
     }
     }
   

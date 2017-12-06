@@ -7,32 +7,17 @@ const int16_t h[] = {-920, -1133, -353, 2816, 9452, 19862, 33131,
 
 //Funções para o sistema de controle de alimento
 
-//float tirarTara(float *bufferPeso)
-//{
-//  for(char n=0; n<20; n++){
-//    bufferPeso[0] = lerCelula();
-//    deslocarBuffer(bufferPeso);
-//  }
-//  long y = 0;
-//  for(char n=0; n<20; n++)
-//      y += bufferPeso[n];
-//  
-//  return float(y/20);
-//
-
-float bufferPeso[20] ={0};
-
-float obterPeso()
+float obterPeso(float *bufferPeso)
 {
   
   deslocarBuffer(bufferPeso);
   bufferPeso[0] = lerCelula();
 
   float peso = 0.0042792*(filtraPeso(bufferPeso))-138420.27;
-
-  Serial.print(F("Peso lido: "));
-  Serial.print(peso);
-  Serial.println(F(" Kg"));
+    Serial.println(lerCelula());
+//  Serial.print(F("Peso lido: "));
+//  Serial.print(peso);
+//  Serial.println(F(" Kg"));
 
   peso = peso<0 ? 0 : peso>10 ? 10 : peso;
   

@@ -47,10 +47,11 @@ void ini_prot_aliment()
     Serial.print(":");  
     Serial.print(diretriz.minutod[cont]);
     Serial.print("  com : ");
-    Serial.print(diretriz.qtdd[cont]);
+    Serial.print(float(diretriz.qtdd[cont])/10);
     Serial.println("kg");  
-    //alimentaPeixes(float(diretriz.qtdd[cont]));
-    
+    alimentaPeixes(diretriz.qtdd[cont]);
+
+
     
     flag_a = true;
     pastflag = millis();
@@ -68,7 +69,7 @@ void ini_prot_aliment()
 
 
 
-void alimentaPeixes(float valorAlimento)
+void alimentaPeixes(unsigned int valorAlimento)
 {
   //AlarmId id = Alarm.getTriggeredAlarmId();
   //float valorAlimento, massa = qtdRacao[id];
@@ -91,41 +92,48 @@ void alimentaPeixes(float valorAlimento)
     esvaziarCompatimento();
   }
   */
-  valorAlimento = valorAlimento/10;
-  while(valorAlimento > 10.0)
+  float massa = ((float)valorAlimento)/10;
+  while(massa > 10)
   {
-    DespejarRacao(valorAlimento);
-    esvaziarCompatimento();
+    DespejarRacao(10);
+    esvaziarCompatimento(valorAlimento);
     
-    valorAlimento = valorAlimento - 10.0;
+    massa = massa - 10;
+    valorAlimento = valorAlimento - 100;
   }
 
-  DespejarRacao(valorAlimento);
-  esvaziarCompatimento();
+  DespejarRacao(massa);
+  esvaziarCompatimento(valorAlimento);
+
 }
 
 
 void DespejarRacao(float pesoAlimento)
 {
-  //float bufferPeso[20] = {0};
-  
+  float bufferPeso[20] = {0};
+  flag_alimenta=millis();
   digitalWrite(fuso, HIGH);
-  while( lerCelula() <= pesoAlimento ); //delay(100);
+  while( /*(obterPeso(bufferPeso) <= pesoAlimento) ||*/ ((millis()-flag_alimenta)<= pesoAlimento*tempoPortaAbert*10));
   
   digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
 }
 
-void esvaziarCompatimento()
+void esvaziarCompatimento(unsigned int pesoAlimento)
 {
   porta.write(anguloPortaFecha);
   delay(2000);
   digitalWrite(enServo, HIGH);
   porta.write(anguloPortaAbert);
-  delay(tempoPortaAbert);
+  delay(1.2*tempoPortaAbert*pesoAlimento);
   porta.write(anguloPortaFecha);
   delay(2000);
   digitalWrite(enServo, LOW);
 }
 
+
+void fecha_porta()
+{
+  porta.write(anguloPortaFecha);
+}
 

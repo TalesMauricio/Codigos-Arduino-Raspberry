@@ -49,8 +49,9 @@ void ini_prot_aliment()
     Serial.print("  com : ");
     Serial.print(diretriz.qtdd[cont]);
     Serial.println("kg");  
-    //alimentaPeixes(float(diretriz.qtdd[cont]));
-    
+    alimentaPeixes(float(diretriz.qtdd[cont]));
+
+
     
     flag_a = true;
     pastflag = millis();
@@ -91,26 +92,32 @@ void alimentaPeixes(float valorAlimento)
     esvaziarCompatimento();
   }
   */
-  valorAlimento = valorAlimento/10;
-  while(valorAlimento > 10.0)
-  {
-    DespejarRacao(valorAlimento);
-    esvaziarCompatimento();
-    
-    valorAlimento = valorAlimento - 10.0;
-  }
+//  valorAlimento = valorAlimento/10;
+//  while(valorAlimento > 10.0)
+//  {
+//    DespejarRacao(valorAlimento);
+//    esvaziarCompatimento();
+//    
+//    valorAlimento = valorAlimento - 10.0;
+//  }
+//
+//  DespejarRacao(valorAlimento);
+//  esvaziarCompatimento();
 
-  DespejarRacao(valorAlimento);
-  esvaziarCompatimento();
+  digitalWrite(fuso, HIGH);
+  //while( obterPeso(bufferPeso) <= pesoAlimento ); //delay(100);
+  delay(5000);
+  digitalWrite(ADSK, HIGH);
+  digitalWrite(fuso, LOW);
 }
 
 
 void DespejarRacao(float pesoAlimento)
 {
-  //float bufferPeso[20] = {0};
+  float bufferPeso[20] = {0};
   
   digitalWrite(fuso, HIGH);
-  while( lerCelula() <= pesoAlimento ); //delay(100);
+  while( obterPeso(bufferPeso) <= pesoAlimento ); //delay(100);
   
   digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
@@ -118,14 +125,32 @@ void DespejarRacao(float pesoAlimento)
 
 void esvaziarCompatimento()
 {
+  int pos = anguloPortaFecha;    // variable to store the servo position
+  
   porta.write(anguloPortaFecha);
   delay(2000);
-  digitalWrite(enServo, HIGH);
+  digitalWrite(enServo, HIGH);  
+  
   porta.write(anguloPortaAbert);
+  for (pos = anguloPortaFecha;  pos <= anguloPortaAbert; pos += 1) {   
+    porta.write(pos);           
+    delay(15);                     
+  for (pos = 180; pos >= 0; pos -= 1) { 
+    myservo.write(pos);             
+    delay(15);                     
+  }
+
+
+  
   delay(tempoPortaAbert);
   porta.write(anguloPortaFecha);
   delay(2000);
   digitalWrite(enServo, LOW);
+}
+void Fecha_porta()
+{
+  porta.write(anguloPortaFecha);
+ }
 }
 
 

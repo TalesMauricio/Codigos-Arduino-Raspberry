@@ -16,9 +16,10 @@
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <Wire.h>
 #include <TimeLib.h>
-#include <TimeAlarms.h>
+//#include <TimeAlarms.h>
 
 #include "structs.cpp"
+#include "secundaria/dados.cpp"
 
 /**** Pinos da célula de carga ****/
 #define  ADSK  3  //SCK
