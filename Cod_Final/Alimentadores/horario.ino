@@ -12,15 +12,8 @@ void sincTempo(relogio_t relogio)
   
     tempoSinc = true;
 }
-/*
-void agendarDespejo(diretriz_t d)
-{
-  AlarmId id = Alarm.alarmRepeat(d.inicio_hora,d.inicio_minuto,0, alimentaPeixes);
-  qtdRacao[id] = d.qtd;
-  Serial.println("Despejo agendado!");
-}
-*/
-//iii
+
+
 /*
 void printDiretriz(diretriz_t diretriz)
 {
@@ -37,7 +30,6 @@ void printDiretriz(diretriz_t diretriz)
   Serial.println(diretriz.qtd);
 }
 */
-
 
 void printTempo(relogio_t relogio)
 {

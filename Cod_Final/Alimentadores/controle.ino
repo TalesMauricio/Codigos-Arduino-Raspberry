@@ -71,27 +71,7 @@ void ini_prot_aliment()
 
 void alimentaPeixes(unsigned int valorAlimento)
 {
-  //AlarmId id = Alarm.getTriggeredAlarmId();
-  //float valorAlimento, massa = qtdRacao[id];
 
-
-  /*
-  float valorAlimento;
-  
-  bool pronto = false;
-  
-  while(!pronto)
-  {
-    if(massa > 10.0)
-      valorAlimento = 10.0;
-    else {
-      valorAlimento = massa;
-      pronto = true;
-    }
-    DespejarRacao(valorAlimento);
-    esvaziarCompatimento();
-  }
-  */
   float massa = ((float)valorAlimento)/10;
   while(massa > 10)
   {
