@@ -18,32 +18,27 @@ void configPins() {
   
   //motor(fuso) e servo(porta) ****/
   pinMode(fuso, OUTPUT);
+  pinMode(enServo, OUTPUT);
   porta.attach(servo);
   
   //medição de bateria
   pinMode(leBatPin, INPUT);   
   pinMode(enBatPin, OUTPUT);
+  
+
+  //medição de erros
+  pinMode(tampa, INPUT);   
+//  pinMode(rotfuso, INPUT);
   }
 
-/*
+
 
 void ini_prot_aliment()
 {
-//  Serial.print(diretriz.minutod1);
-//  Serial.print("   ");  
-//  Serial.print(minute());
-//  Serial.print("   ");
-//  alimentaPeixes(diretriz.qtdd1);
 
  for(int cont=0; cont<6; cont++)
   {
-//    Serial.print("hora ");
-//    Serial.print(diretriz.horad[cont]);
-//    Serial.print(hour());
-//    Serial.print("    minuto ");
-//    Serial.print(diretriz.minutod[cont]);
-//    Serial.println(minute());
- if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && flag_a[cont]==0){
+ if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && flag_a == false){
     Serial.println(" "); 
     Serial.print("chegou a hora de alimentar");
     Serial.print(cont);
@@ -54,51 +49,68 @@ void ini_prot_aliment()
     Serial.print("  com : ");
     Serial.print(diretriz.qtdd[cont]);
     Serial.println("kg");  
-
-    //alimentaPeixes(diretriz.qtdd[cont]);
-    flag_a==1;
+    //alimentaPeixes(float(diretriz.qtdd[cont]));
+    
+    
+    flag_a = true;
+    pastflag = millis();
+        
  }
  }
+   
+  if (millis() - pastflag >= 60000 ) {   
+     flag_a = false;    
+  }
 
-  for(int cont=0; cont<6; cont++)
-    if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] != minute()) flag_a[cont] = 0;
 
   
 }
-*/
 
 
-void alimentaPeixes()
+
+void alimentaPeixes(float valorAlimento)
 {
-  AlarmId id = Alarm.getTriggeredAlarmId();
-  float valorAlimento, massa = float( qtdRacao[id] );
+  //AlarmId id = Alarm.getTriggeredAlarmId();
+  //float valorAlimento, massa = qtdRacao[id];
+
+
+  /*
+  float valorAlimento;
+  
   bool pronto = false;
-
-  printAlimenta(massa);
-
+  
   while(!pronto)
   {
-    if(massa > capacCompat) {
-      valorAlimento = capacCompat;
-      massa -= capacCompat;
-    }
+    if(massa > 10.0)
+      valorAlimento = 10.0;
     else {
       valorAlimento = massa;
       pronto = true;
     }
-   // despejarRacao(valorAlimento);
+    DespejarRacao(valorAlimento);
     esvaziarCompatimento();
   }
+  */
+  valorAlimento = valorAlimento/10;
+  while(valorAlimento > 10.0)
+  {
+    DespejarRacao(valorAlimento);
+    esvaziarCompatimento();
+    
+    valorAlimento = valorAlimento - 10.0;
+  }
 
+  DespejarRacao(valorAlimento);
+  esvaziarCompatimento();
 }
 
 
-void despejarRacao(float pesoAlimento)
+void DespejarRacao(float pesoAlimento)
 {
-  float bufferPeso[20] = {0};
+  //float bufferPeso[20] = {0};
   
   digitalWrite(fuso, HIGH);
-  while( obterPeso(bufferPeso) <= pesoAlimento ); delay(10);
+  while( lerCelula() <= pesoAlimento ); //delay(100);
   
   digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
@@ -106,19 +118,14 @@ void despejarRacao(float pesoAlimento)
 
 void esvaziarCompatimento()
 {
+  porta.write(anguloPortaFecha);
+  delay(2000);
+  digitalWrite(enServo, HIGH);
   porta.write(anguloPortaAbert);
   delay(tempoPortaAbert);
   porta.write(anguloPortaFecha);
+  delay(2000);
+  digitalWrite(enServo, LOW);
 }
 
-void printAlimenta(float massa) {
-  Serial.println(" ");
-  Serial.print(F("Chegou a hora de alimentar"));
-  Serial.print(F(": "));
-  Serial.print(hour());
-  Serial.print(F(": "));
-  Serial.print(minute());
-  Serial.print(F("  com : "));
-  Serial.print(massa);
-  Serial.println(F("kg"));
- }
+

@@ -11,7 +11,7 @@
 
 #define anguloPortaAbert 60
 #define anguloPortaFecha 0
-#define tempoPortaAbert 4000 // Em MS
+#define tempoPortaAbert 3000 // Em MS
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <Wire.h>
@@ -64,5 +64,8 @@ bool flag_a = false;
 unsigned long past = 0;
 unsigned long pastflag = 0;
 unsigned long pastbat = 0;
+unsigned long tara = 0;
 //uint8_t flag_a = 0; //Flag para verificar se já alimentou naquele horário
+
+unsigned long flag_alimenta = 0;
 
