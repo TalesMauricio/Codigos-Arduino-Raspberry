@@ -1,7 +1,7 @@
-
+#include <Arduino.h>
 struct Sensores_t
 {
-  uint8_t temperatura;
+  int16_t temperatura;
   uint8_t ph;
   uint8_t turbidez;
   uint8_t condutividade;
