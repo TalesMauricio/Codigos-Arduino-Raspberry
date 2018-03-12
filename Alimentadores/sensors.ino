@@ -1,5 +1,6 @@
 //Aqui vai tudo relacionado aos sensores secundários e a comunicação i2c com o outro módulo
 
+/*
 void medirBateria()
 {
   digitalWrite(enBatPin, HIGH);
@@ -7,7 +8,7 @@ void medirBateria()
   nivelBateria = analogRead(leBatPin);
   digitalWrite(enBatPin, LOW);
 }
-
+*/
 void reqMedidasSec()
 {
    Dados_t dado;
@@ -21,6 +22,7 @@ void reqMedidasSec()
    } else {
     dados = {0,0,0,0,0};
    }
-   
-   //dados = dado.valor;
+
+  dados = {dados.temperatura,dados.ph,0,0,0};
+  delay(800);
 }

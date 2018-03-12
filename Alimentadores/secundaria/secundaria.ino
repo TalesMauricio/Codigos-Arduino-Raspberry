@@ -26,13 +26,17 @@ void loop() {
 //  dados.valor.turbidez = analogRead(pinTurb);
 //  dados.valor.condutividade = analogRead(pinCond);
 //  dados.valor.oxigen = analogRead(pinOxig);
+
+  Serial.print("  Temperature2 = ");
+  Serial.print( (float)dados.valor.temperatura / 16.0 );
+  Serial.println(" Celsius, ");
 }
 
 void requestEvent() { // function that executes whenever data is requested by master
   Wire.write(dados.bytes);
 }
 
-uint8_t lerTemp(void) {
+int16_t lerTemp(void) {
   byte type_s;
   byte data[12];
   byte addr[8];
@@ -53,7 +57,9 @@ uint8_t lerTemp(void) {
   ds.select(addr);
   ds.write(0x44, 1);        // start conversion, with parasite power on at the end
   
-  delay(1000);     // maybe 750ms is enough, maybe not
+  long inic = millis();
+  while(millis()-inic  < 800);
+  delay(750);     // maybe 750ms is enough, maybe not
   // we might do a ds.depower() here, but the reset will take care of it.
   
   byte present = ds.reset();
@@ -77,10 +83,10 @@ uint8_t lerTemp(void) {
     else if (cfg == 0x40) raw = raw & ~1; // 11 bit res, 375 ms
     //// default is 12 bit resolution, 750 ms conversion time
   }
-  celsius = (float)raw / 16.0; 
-  Serial.print("  Temperature = ");
-  Serial.print(celsius);
-  Serial.println(" Celsius, "); 
+//  celsius = (float)raw / 16.0; 
+//  Serial.print("  Temperature = ");
+//  Serial.print(celsius);
+//  Serial.println(" Celsius, "); 
 
-  return raw/16;
+  return raw;
 }

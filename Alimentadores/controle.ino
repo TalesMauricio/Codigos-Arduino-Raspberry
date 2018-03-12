@@ -1,5 +1,6 @@
 //Aqui vai tudo relacionado ao acionamento de cargas, medição e controle dos motores
 
+
 #include <Servo.h>
 
 Servo porta;
@@ -17,62 +18,102 @@ void configPins() {
   
   //motor(fuso) e servo(porta) ****/
   pinMode(fuso, OUTPUT);
+  pinMode(enServo, OUTPUT);
   porta.attach(servo);
   
   //medição de bateria
   pinMode(leBatPin, INPUT);   
   pinMode(enBatPin, OUTPUT);
+  
+
+  //medição de erros
+  pinMode(tampa, INPUT);   
+//  pinMode(rotfuso, INPUT);
   }
 
-void alimentaPeixes()
+
+
+void ini_prot_aliment()
 {
-  AlarmId id = Alarm.getTriggeredAlarmId();
-  float valorAlimento, massa = float( qtdRacao[id] );
-  bool pronto = false;
 
-  printAlimenta(massa);
-
-  while(!pronto)
+ for(int cont=0; cont<6; cont++)
   {
-    if(massa > capacCompat) {
-      valorAlimento = capacCompat;
-      massa -= capacCompat;
-    }
-    else {
-      valorAlimento = massa;
-      pronto = true;
-    }
-    despejarRacao(valorAlimento);
-    esvaziarCompatimento();
+ if(diretriz.horad[cont] == hour() && diretriz.minutod[cont] == minute() && flag_a == false){
+    Serial.println(" "); 
+    Serial.print("chegou a hora de alimentar");
+    Serial.print(cont);
+    Serial.print(": "); 
+    Serial.print(diretriz.horad[cont]);  
+    Serial.print(":");  
+    Serial.print(diretriz.minutod[cont]);
+    Serial.print("  com : ");
+    Serial.print(float(diretriz.qtdd[cont])/10);
+    Serial.println("kg");  
+    alimentaPeixes(diretriz.qtdd[cont]);
+
+
+    
+    flag_a = true;
+    pastflag = millis();
+        
+ }
+ }
+   
+  if (millis() - pastflag >= 60000 ) {   
+     flag_a = false;    
   }
+
+
+  
 }
 
-void despejarRacao(float pesoAlimento)
+
+
+void alimentaPeixes(unsigned int valorAlimento)
+{
+
+  float massa = ((float)valorAlimento)/10;
+  while(massa > 10)
+  {
+    DespejarRacao(10);
+    esvaziarCompatimento(valorAlimento);
+    
+    massa = massa - 10;
+    valorAlimento = valorAlimento - 100;
+  }
+
+  DespejarRacao(massa);
+  esvaziarCompatimento(valorAlimento);
+
+}
+
+
+void DespejarRacao(float pesoAlimento)
 {
   float bufferPeso[20] = {0};
-  
+  flag_alimenta=millis();
   digitalWrite(fuso, HIGH);
-  while( obterPeso(bufferPeso) <= pesoAlimento );
+  while( (obterPeso(bufferPeso) <= pesoAlimento) || ((millis()-flag_alimenta)<= pesoAlimento*tempoPortaAbert*10));
   
   digitalWrite(ADSK, HIGH);
   digitalWrite(fuso, LOW);
 }
-void esvaziarCompatimento()
+
+void esvaziarCompatimento(unsigned int pesoAlimento)
 {
-  porta.write(anguloPortaAbert);
-  delay(tempoPortaAbert);
   porta.write(anguloPortaFecha);
-  Serial.println(F("Ração despejada"));
+  delay(2000);
+  digitalWrite(enServo, HIGH);
+  porta.write(anguloPortaAbert);
+  delay(1.2*tempoPortaAbert*pesoAlimento);
+  porta.write(anguloPortaFecha);
+  delay(2000);
+  digitalWrite(enServo, LOW);
 }
 
-void printAlimenta(float massa) {
-  Serial.println(" ");
-  Serial.print(F("Chegou a hora de alimentar"));
-  Serial.print(F(": "));
-  Serial.print(hour());
-  Serial.print(F(": "));
-  Serial.print(minute());
-  Serial.print(F("  com : "));
-  Serial.print(massa);
-  Serial.println(F("kg"));
- }
+
+void fecha_porta()
+{
+  porta.write(anguloPortaFecha);
+}
+

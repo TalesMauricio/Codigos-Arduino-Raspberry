@@ -6,25 +6,27 @@ const int16_t h[] = {-920, -1133, -353, 2816, 9452, 19862, 33131,
 #define hSoma 468608
 
 //Funções para o sistema de controle de alimento
+
 float obterPeso(float *bufferPeso)
 {
   
   deslocarBuffer(bufferPeso);
   bufferPeso[0] = lerCelula();
 
-  float peso = filtraPeso(bufferPeso);
-
+  float peso = 0.0042792*(filtraPeso(bufferPeso))-138420.27;
+    
   Serial.print(F("Peso lido: "));
   Serial.print(peso);
   Serial.println(F(" Kg"));
+
+  peso = peso<0 ? 0 : peso>10 ? 10 : peso;
   
-  //return peso;
-  return 12.0;  //Valor de saída arbtrado para pular leitura da célula
+  return peso;
 }
 
 float filtraPeso(float *x)
 {
-    long y = 0;
+    float y = 0;
     for(char n=0; n<20; n++)
         y += x[n]*h[n];
     
@@ -40,14 +42,16 @@ void deslocarBuffer(float *bufferPeso)
 }
 
 
+
 float lerCelula()
+//unsigned long lerCelula()
 {
-  long inic = millis();
+  //long inic = millis();
   unsigned long Count = 0;
   digitalWrite(ADSK, LOW);
   
-  delay(500); //while(digitalRead(ADDO)); //Enquanto não tiver um sinal nessa porta, ele fica preso nesse loop
-
+  while(digitalRead(ADDO));
+  
   for(int i=0;i<24;i++)
   {
      digitalWrite(ADSK, HIGH);
@@ -63,11 +67,11 @@ float lerCelula()
   //Serial.println(Count);
 
   //Calibrar as células de carga
-  float massa = -0.0016312*float(Count)+13984.113;
+  //float massa = -0.0011*float(Count)+918.45363;
 
-  Serial.print(F("tempo decorrido de leitura da célula: "));
-  Serial.print(millis() - inic);
-  Serial.println(F(" ms"));
-  return(massa);
+  //Serial.print("tempo decorrido: ");
+  //Serial.println(inic-millis());
+  
+  return((float)Count);
 }
 
