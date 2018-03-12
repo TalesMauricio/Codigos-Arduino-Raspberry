@@ -16,11 +16,11 @@ void setup() {
 void loop() {
   atualizarMalha();  //Declarado em comunicacao
 
- // if(conectado)
- // {
-  recebeDiretriz();
-  enviaPacote();
- // }
+  if(conectado)
+  {
+    recebeDiretriz();
+    enviaPacote();
+  }
   delay(60);
   
   ini_prot_aliment();

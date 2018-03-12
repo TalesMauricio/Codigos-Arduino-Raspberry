@@ -11,7 +11,7 @@
 
 #define anguloPortaAbert 120
 #define anguloPortaFecha 50
-#define tempoPortaAbert 500 // Em MS
+#define tempoPortaAbert 500 // [ms]
 
 // Aqui devem ser declaradas todas as bibliotecas compartilhadas, os defines de pinos e as variáveis globais, que são usadas em mais de um arquivo.
 #include <Wire.h>
@@ -57,7 +57,7 @@ float qtdRacao[dtNBR_ALARMS];
 Sensores_t dados;
 
 
-bool conectado = false;
+bool conectado = true;//false;
 bool tempoSinc = false;
 bool erro_nivel_ra = false;
 bool flag_a = false;
