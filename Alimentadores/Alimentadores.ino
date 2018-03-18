@@ -19,7 +19,7 @@ void loop() {
   if(conectado)
   {
     recebeDiretriz();
-    enviaPacote();
+    enviaDados();
   }
   delay(60);
   

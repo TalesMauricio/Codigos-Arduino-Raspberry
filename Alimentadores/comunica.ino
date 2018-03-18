@@ -1,9 +1,9 @@
 //Aqui vai tudo relacionado a comunicação sem fio
 
 
-#include "RF24.h"
-#include "RF24Network.h"
-#include "RF24Mesh.h"
+#include <RF24.h>
+#include <RF24Network.h>
+#include <RF24Mesh.h>
 
 #define nodeID 2        //1-255
 #define intervalo 6000  // tempo em milissegundos para enviar os dados 
@@ -39,7 +39,7 @@ bool atualizarMalha()
   */
 }
 
-void enviaPacote() {
+void enviaDados() {
  
     if (millis() - pastbat >= 60000) {
     pastbat = millis();
